@@ -266,6 +266,12 @@ function clearAlert() {
 }
 
 function checkFallbackState() {
+    // If the video stream is still hidden, we haven't received the first frame yet.
+    // Let the default "Waiting for mobile stream..." UI handle it.
+    if (videoStream.classList.contains('hidden')) {
+        return;
+    }
+
     const timeSinceLastFrame = Date.now() - lastFrameTime;
     latencyCalc.textContent = `${Math.floor(timeSinceLastFrame / 1000)}s ago`;
 
