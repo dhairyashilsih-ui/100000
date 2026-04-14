@@ -128,8 +128,13 @@ function connectToDashboard(host, code) {
     ws.onmessage = (event) => {
         if (typeof event.data === "string") {
             const data = JSON.parse(event.data);
+            
+            const serverToBrowserMs = Date.now() - (data.timestamp * 1000);
+            console.log(`%c[NETWORK] Received frame JSON metadata. Network Transit Delay: ~${Math.floor(serverToBrowserMs)}ms`, 'color: #3b82f6; font-weight: bold;');
+            
             updateDashboard(data);
         } else if (event.data instanceof ArrayBuffer) {
+            console.log(`%c[RENDER] ArrayBuffer frame arrived (${event.data.byteLength} bytes). Decoding...`, 'color: #8b5cf6;');
             renderFrame(event.data);
         }
     };
@@ -162,15 +167,20 @@ function renderFrame(arrayBuffer) {
     
     currentFrameId++;
     const thisFrameId = currentFrameId;
+    const decodeStart = Date.now();
 
     const img = new Image();
 
     img.onload = () => {
+        const decodeTime = Date.now() - decodeStart;
         // If a newer frame started loading while we were decoding, discard this one
         if (thisFrameId !== currentFrameId) {
+            console.log(`[RENDER] 🚨 Dropped older frame #${thisFrameId} (Superseded by #${currentFrameId}) after ${decodeTime}ms decode.`);
             URL.revokeObjectURL(newUrl);
             return;
         }
+
+        console.log(`%c[RENDER] ✅ Painted frame #${thisFrameId} successfully in ${decodeTime}ms.`, 'color: #10b981;');
 
         // Revoke the OLD blob URL now that the new frame is ready
         if (window.previousImageUrl) {

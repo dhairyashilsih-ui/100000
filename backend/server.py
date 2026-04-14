@@ -199,10 +199,13 @@ async def websocket_camera(websocket: WebSocket, code: str):
         try:
             while processing_state["running"]:
                 data = await websocket.receive_bytes()
+                recv_time = time.time()
                 session.touch()
                 # FIX: Always overwrite with newest frame — old unprocessed frames are discarded
                 # This prevents buffer buildup that caused the "stuck then jump" behavior
                 processing_state["latest_frame"] = data
+                processing_state["latest_frame_time"] = recv_time
+                logger.info(f"[{code}] [RECEIVER] Frame arrived from Android and queued. Network/Wait gap: ~{int((time.time() - recv_time)*1000)}ms")
         except WebSocketDisconnect:
             pass
         except Exception as e:
@@ -222,8 +225,10 @@ async def websocket_camera(websocket: WebSocket, code: str):
         FIX 3: When no frame is queued, yields with a short sleep instead of
                 busy-waiting so the event loop stays responsive.
         """
+        active_sends = set()
         last_sent_payload = None
         last_sent_jpeg = None
+        
         try:
             while processing_state["running"]:
                 data = processing_state["latest_frame"]
@@ -236,11 +241,19 @@ async def websocket_camera(websocket: WebSocket, code: str):
 
                 # Claim and clear the frame atomically
                 processing_state["latest_frame"] = None
+                frame_born_time = processing_state.get("latest_frame_time", time.time())
+                queue_wait_ms = int((time.time() - frame_born_time) * 1000)
 
                 try:
+                    logger.info(f"[{code}] [PROCESS] Yanked frame from queue. It waited {queue_wait_ms}ms. Starting YOLO inference...")
+                    inf_start = time.time()
+                    
                     # Offload CPU-heavy YOLO inference to a thread pool
                     # so the async event loop isn't blocked during inference
                     result = await asyncio.to_thread(process_frame, data)
+
+                    inf_time_ms = int((time.time() - inf_start) * 1000)
+                    logger.info(f"[{code}] [PROCESS] YOLO Inference completed in {inf_time_ms}ms. Found {result['count']} people.")
 
                     last_sent_jpeg = result["jpeg_bytes"]
                     del result["jpeg_bytes"]
@@ -260,8 +273,18 @@ async def websocket_camera(websocket: WebSocket, code: str):
                         except Exception:
                             if ws in session.dashboard_connections:
                                 session.dashboard_connections.remove(ws)
+                        finally:
+                            active_sends.discard(ws)
                                 
                     for dash_ws in session.dashboard_connections.copy():
+                        if dash_ws in active_sends:
+                            # The web app is still downloading the previous frame. 
+                            # Drop this frame to stay in perfect real-time.
+                            logger.info(f"[{code}] [NETWORK] 🚨 DROPPED frame for dashboard (still sending previous frame). Downlink is slow.")
+                            continue
+                            
+                        active_sends.add(dash_ws)
+                        logger.info(f"[{code}] [NETWORK] 🚀 Dispatching new frame block to dashboard...")
                         asyncio.create_task(send_to_dash(dash_ws, last_sent_payload, last_sent_jpeg))
 
         except asyncio.CancelledError:

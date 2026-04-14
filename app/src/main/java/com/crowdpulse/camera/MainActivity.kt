@@ -140,7 +140,7 @@ class MainActivity : ComponentActivity() {
                                 if (emailState != null) {
                                     navController.navigate("home") {
                                         popUpTo("splash") { inclusive = true }
-                                    }
+                                    } 
                                 } else {
                                     navController.navigate("auth") {
                                         popUpTo("splash") { inclusive = true }
