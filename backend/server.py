@@ -190,69 +190,63 @@ async def websocket_camera(websocket: WebSocket, code: str):
     session.touch()
     logger.info(f"[{code}] Camera connected. Total cams: {len(session.camera_connections)}")
 
-    # Drop 30-Second Bounded Buffer - use latest frame replacement pipeline
     processing_state = {"latest_frame": None}
-    new_frame_event = asyncio.Event()
 
     async def receive_worker():
         try:
             while True:
                 data = await websocket.receive_bytes()
                 session.touch()
-                
-                # If we're busy, this simply overwrites the old un-processed frame
                 processing_state["latest_frame"] = data
-                new_frame_event.set()
         except WebSocketDisconnect:
             pass
         except Exception as e:
             logger.error(f"[{code}] Receive worker error: {e}")
 
     async def process_worker():
+        last_sent_payload = None
+        last_sent_jpeg = None
         try:
             while True:
-                await new_frame_event.wait()
                 data = processing_state["latest_frame"]
-                processing_state["latest_frame"] = None
-                new_frame_event.clear()
-
-                if data is None:
-                    continue
-
-                try:
-                    # Offload to thread so async loop isn't blocked
-                    result_payload = await asyncio.to_thread(process_frame, data)
-                    
-                    # Split into JSON and Binary
-                    jpeg_bytes = base64.b64decode(result_payload["image_b64"])
-                    del result_payload["image_b64"] # Remove heavy string
-                    
-                    payload_str = json.dumps(result_payload)
+                if data is not None:
+                    processing_state["latest_frame"] = None
+                    try:
+                        # Offload to thread so async loop isn't blocked
+                        result_payload = await asyncio.to_thread(process_frame, data)
+                        
+                        # Split into JSON and Binary
+                        jpeg_bytes = base64.b64decode(result_payload["image_b64"])
+                        del result_payload["image_b64"]
+                        
+                        last_sent_payload = json.dumps(result_payload)
+                        last_sent_jpeg = jpeg_bytes
+                    except Exception as e:
+                        logger.error(f"[{code}] Inference error: {e}")
+                
+                # Continuously send if we have something
+                if last_sent_payload is not None and last_sent_jpeg is not None:
                     dead = []
                     for dash_ws in session.dashboard_connections:
                         try:
-                            # Send JSON stats first
-                            await dash_ws.send_text(payload_str)
-                            # Immediently follow up with raw binary blob
-                            await dash_ws.send_bytes(jpeg_bytes)
+                            await dash_ws.send_text(last_sent_payload)
+                            await dash_ws.send_bytes(last_sent_jpeg)
                         except Exception:
                             dead.append(dash_ws)
                     for d in dead:
                         session.dashboard_connections.remove(d)
-                except Exception as e:
-                    logger.error(f"[{code}] Inference error: {e}")
+                
+                await asyncio.sleep(0.05)
         except asyncio.CancelledError:
             pass
         except Exception as e:
             logger.error(f"[{code}] Process worker error: {e}")
 
+    # Run both together
     receive_task = asyncio.create_task(receive_worker())
     process_task = asyncio.create_task(process_worker())
-
-    # The connection stays alive until the camera disconnects (receive_task finishes)
-    await receive_task
     
-    # Gracefully shut down the processing
+    await asyncio.gather(receive_task, process_task, return_exceptions=True)
     process_task.cancel()
 
     session.camera_connections.remove(websocket)
@@ -265,8 +259,9 @@ async def websocket_dashboard(websocket: WebSocket, code: str):
     code = code.upper()
     session = get_session(code)
     if session is None:
-        await websocket.close(code=4404, reason="Invalid or expired session code")
-        return
+        sessions[code] = Session(code)
+        session = sessions[code]
+        logger.info(f"[{code}] Session auto-created from dashboard.")
 
     await websocket.accept()
     session.dashboard_connections.append(websocket)

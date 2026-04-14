@@ -79,6 +79,7 @@ function connectToDashboard(host, code) {
     statusDot.className = 'w-3 h-3 rounded-full bg-amber-400 animate-pulse';
 
     ws = new WebSocket(wsUrl);
+    ws.binaryType = "arraybuffer";
 
     ws.onopen = () => {
         statusText.textContent = 'Connected';
@@ -118,12 +119,13 @@ function connectToDashboard(host, code) {
         if (typeof event.data === "string") {
             const data = JSON.parse(event.data);
             updateDashboard(data);
-        } else if (event.data instanceof Blob) {
+        } else if (event.data instanceof ArrayBuffer) {
             // Binary payload
             if (window.previousImageUrl) {
                 URL.revokeObjectURL(window.previousImageUrl);
             }
-            const currentImageUrl = URL.createObjectURL(event.data);
+            const blob = new Blob([event.data], {type: "image/jpeg"});
+            const currentImageUrl = URL.createObjectURL(blob);
             videoStream.src = currentImageUrl;
             videoStream.classList.remove('hidden');
             noSignal.classList.add('hidden');
