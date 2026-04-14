@@ -164,12 +164,11 @@ def process_frame(frame_bytes: bytes) -> Dict:
         status = "RED"
 
     _, encoded_img = cv2.imencode(".jpg", annotated_img, [cv2.IMWRITE_JPEG_QUALITY, 60])
-    b64_image = base64.b64encode(encoded_img).decode("utf-8")
 
     return {
         "status": status,
         "count": count,
-        "image_b64": b64_image,
+        "jpeg_bytes": encoded_img.tobytes(),
         "timestamp": time.time()
     }
 
@@ -209,34 +208,35 @@ async def websocket_camera(websocket: WebSocket, code: str):
         try:
             while True:
                 data = processing_state["latest_frame"]
+                new_frame_processed = False
                 if data is not None:
                     processing_state["latest_frame"] = None
                     try:
                         # Offload to thread so async loop isn't blocked
-                        result_payload = await asyncio.to_thread(process_frame, data)
+                        result = await asyncio.to_thread(process_frame, data)
                         
-                        # Split into JSON and Binary
-                        jpeg_bytes = base64.b64decode(result_payload["image_b64"])
-                        del result_payload["image_b64"]
+                        last_sent_jpeg = result["jpeg_bytes"]
+                        del result["jpeg_bytes"]
                         
-                        last_sent_payload = json.dumps(result_payload)
-                        last_sent_jpeg = jpeg_bytes
+                        last_sent_payload = json.dumps(result)
+                        new_frame_processed = True
                     except Exception as e:
                         logger.error(f"[{code}] Inference error: {e}")
                 
                 # Continuously send if we have something
-                if last_sent_payload is not None and last_sent_jpeg is not None:
+                if last_sent_jpeg is not None:
                     dead = []
                     for dash_ws in session.dashboard_connections:
                         try:
-                            await dash_ws.send_text(last_sent_payload)
+                            if new_frame_processed and last_sent_payload is not None:
+                                await dash_ws.send_text(last_sent_payload)
                             await dash_ws.send_bytes(last_sent_jpeg)
                         except Exception:
                             dead.append(dash_ws)
                     for d in dead:
                         session.dashboard_connections.remove(d)
                 
-                await asyncio.sleep(0.05)
+                await asyncio.sleep(0.1)  # 10 FPS
         except asyncio.CancelledError:
             pass
         except Exception as e:
