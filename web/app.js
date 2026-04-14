@@ -120,21 +120,25 @@ function connectToDashboard(host, code) {
             const data = JSON.parse(event.data);
             updateDashboard(data);
         } else if (event.data instanceof ArrayBuffer) {
-            // Binary payload
-            if (window.previousImageUrl) {
-                URL.revokeObjectURL(window.previousImageUrl);
-            }
-            const blob = new Blob([event.data], {type: "image/jpeg"});
-            const currentImageUrl = URL.createObjectURL(blob);
-            videoStream.src = currentImageUrl;
-            videoStream.classList.remove('hidden');
-            noSignal.classList.add('hidden');
-            window.previousImageUrl = currentImageUrl;
-            
-            // Ping UI
-            reconnectingOverlay.classList.replace('opacity-100', 'opacity-0');
-            reconnectingOverlay.classList.add('pointer-events-none');
-            lastFrameTime = Date.now();
+            const blob = new Blob([event.data], { type: "image/jpeg" });
+            const newUrl = URL.createObjectURL(blob);
+
+            // Preload off-screen, then swap — eliminates flicker
+            const img = new Image();
+            img.onload = () => {
+                if (window.previousImageUrl) {
+                    URL.revokeObjectURL(window.previousImageUrl);
+                }
+                videoStream.src = newUrl;
+                window.previousImageUrl = newUrl;
+
+                videoStream.classList.remove('hidden');
+                noSignal.classList.add('hidden');
+                reconnectingOverlay.classList.replace('opacity-100', 'opacity-0');
+                reconnectingOverlay.classList.add('pointer-events-none');
+                lastFrameTime = Date.now();
+            };
+            img.src = newUrl;
         }
     };
 }

@@ -27,6 +27,10 @@ class WebRTCClient(private val context: Context, private val onConnectionStateCh
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    private var lastFrameSentAt = 0L
+    private val TARGET_FPS = 12  // match to server's processing rate
+    private val FRAME_INTERVAL_MS = 1000L / TARGET_FPS
+
     /**
      * Set or update the backend host. No session code required here;
      * call [setSession] to provide the code and connect.
@@ -110,10 +114,15 @@ class WebRTCClient(private val context: Context, private val onConnectionStateCh
 
     fun sendFrame(jpegBytes: ByteArray) {
         if (!isConnected) return
+        
+        val now = System.currentTimeMillis()
+        if (now - lastFrameSentAt < FRAME_INTERVAL_MS) return  // drop this frame
+        lastFrameSentAt = now
+
         val byteString = ByteString.of(*jpegBytes)
         val success = webSocket?.send(byteString) ?: false
         if (!success) {
-            Log.d("WebRTCClient", "Warning: Frame dropped due to socket buffer full")
+            Log.w("WebRTCClient", "Frame dropped — socket buffer full")
         }
     }
 

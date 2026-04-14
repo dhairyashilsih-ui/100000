@@ -179,7 +179,6 @@ async def websocket_camera(websocket: WebSocket, code: str):
     code = code.upper()
     session = get_session(code)
     if session is None:
-        # Auto-create session if it doesn't exist
         sessions[code] = Session(code)
         session = sessions[code]
         logger.info(f"[{code}] Session auto-created from camera device.")
@@ -189,67 +188,104 @@ async def websocket_camera(websocket: WebSocket, code: str):
     session.touch()
     logger.info(f"[{code}] Camera connected. Total cams: {len(session.camera_connections)}")
 
-    processing_state = {"latest_frame": None}
+    # FIX: Added 'running' flag for clean cooperative shutdown between workers
+    processing_state = {
+        "latest_frame": None,
+        "running": True,
+    }
 
     async def receive_worker():
+        """Continuously receives frames from the camera, always keeping only the newest."""
         try:
-            while True:
+            while processing_state["running"]:
                 data = await websocket.receive_bytes()
                 session.touch()
+                # FIX: Always overwrite with newest frame — old unprocessed frames are discarded
+                # This prevents buffer buildup that caused the "stuck then jump" behavior
                 processing_state["latest_frame"] = data
         except WebSocketDisconnect:
             pass
         except Exception as e:
             logger.error(f"[{code}] Receive worker error: {e}")
+        finally:
+            # Signal process_worker to stop when camera disconnects
+            processing_state["running"] = False
 
     async def process_worker():
+        """
+        Processes frames as fast as YOLO allows and forwards to dashboards.
+
+        FIX 1: Removed the blanket asyncio.sleep(0.1) that was adding 100ms
+                on top of every inference cycle (YOLO already takes 200-500ms).
+        FIX 2: Only sends a frame to dashboards when a NEW frame was just
+                processed — no longer re-broadcasts stale frames repeatedly.
+        FIX 3: When no frame is queued, yields with a short sleep instead of
+                busy-waiting so the event loop stays responsive.
+        """
         last_sent_payload = None
         last_sent_jpeg = None
         try:
-            while True:
+            while processing_state["running"]:
                 data = processing_state["latest_frame"]
-                new_frame_processed = False
-                if data is not None:
-                    processing_state["latest_frame"] = None
-                    try:
-                        # Offload to thread so async loop isn't blocked
-                        result = await asyncio.to_thread(process_frame, data)
-                        
-                        last_sent_jpeg = result["jpeg_bytes"]
-                        del result["jpeg_bytes"]
-                        
-                        last_sent_payload = json.dumps(result)
-                        new_frame_processed = True
-                    except Exception as e:
-                        logger.error(f"[{code}] Inference error: {e}")
-                
-                # Continuously send if we have something
+
+                if data is None:
+                    # No frame queued — yield briefly and check again
+                    # FIX: 10ms yield instead of the old 100ms blanket sleep
+                    await asyncio.sleep(0.01)
+                    continue
+
+                # Claim and clear the frame atomically
+                processing_state["latest_frame"] = None
+
+                try:
+                    # Offload CPU-heavy YOLO inference to a thread pool
+                    # so the async event loop isn't blocked during inference
+                    result = await asyncio.to_thread(process_frame, data)
+
+                    last_sent_jpeg = result["jpeg_bytes"]
+                    del result["jpeg_bytes"]
+                    last_sent_payload = json.dumps(result)
+
+                except Exception as e:
+                    logger.error(f"[{code}] Inference error: {e}")
+                    continue  # Skip sending on error, wait for next frame
+
+                # FIX: Send ONLY when a new frame was just processed
+                # Old code sent stale frames in a tight loop even with no new data
                 if last_sent_jpeg is not None:
                     dead = []
                     for dash_ws in session.dashboard_connections:
                         try:
-                            if new_frame_processed and last_sent_payload is not None:
+                            if last_sent_payload is not None:
                                 await dash_ws.send_text(last_sent_payload)
                             await dash_ws.send_bytes(last_sent_jpeg)
                         except Exception:
                             dead.append(dash_ws)
                     for d in dead:
                         session.dashboard_connections.remove(d)
-                
-                await asyncio.sleep(0.1)  # 10 FPS
+
         except asyncio.CancelledError:
             pass
         except Exception as e:
             logger.error(f"[{code}] Process worker error: {e}")
 
-    # Run both together
     receive_task = asyncio.create_task(receive_worker())
     process_task = asyncio.create_task(process_worker())
-    
-    await asyncio.gather(receive_task, process_task, return_exceptions=True)
-    process_task.cancel()
 
-    session.camera_connections.remove(websocket)
+    # FIX: Wait for receive_task to finish first (camera disconnected),
+    # then cleanly stop and await process_task.
+    # Old code called process_task.cancel() AFTER gather() returned,
+    # which meant the cancel raced with already-finished coroutines.
+    await receive_task
+    processing_state["running"] = False
+    process_task.cancel()
+    try:
+        await process_task
+    except asyncio.CancelledError:
+        pass
+
+    if websocket in session.camera_connections:
+        session.camera_connections.remove(websocket)
     logger.info(f"[{code}] Camera disconnected.")
 
 
@@ -272,7 +308,8 @@ async def websocket_dashboard(websocket: WebSocket, code: str):
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        session.dashboard_connections.remove(websocket)
+        if websocket in session.dashboard_connections:
+            session.dashboard_connections.remove(websocket)
         logger.info(f"[{code}] Dashboard disconnected.")
 
 
