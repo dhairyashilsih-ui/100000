@@ -136,7 +136,6 @@ fun MainScreen(
         )
     }
 
-    // ── FAB pulse animation ─────────────────────────────────────────────────────
     val fabScale by animateFloatAsState(
         targetValue = if (isStreaming) 1f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
@@ -147,6 +146,8 @@ fun MainScreen(
         animationSpec = tween(300),
         label = "fabColor"
     )
+
+    var showCameraManager by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = Color.White,
@@ -194,6 +195,26 @@ fun MainScreen(
                                 color = if (isConnected) SuccessGreen else DangerRed,
                                 fontWeight = FontWeight.Bold
                             )
+                        }
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    // Camera Manager Button
+                    IconButton(onClick = { showCameraManager = true }) {
+                        Surface(
+                            shape = CircleShape,
+                            color = Color(0xFFF1F5F9),
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    Icons.Outlined.Videocam,
+                                    contentDescription = "Cameras",
+                                    tint = PrimaryAccent,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
                         }
                     }
 
@@ -272,6 +293,12 @@ fun MainScreen(
                 onClick = onToggleStream
             )
         }
+    }
+
+    if (showCameraManager) {
+        CameraManagerSheet(
+            onDismissRequest = { showCameraManager = false }
+        )
     }
 }
 
