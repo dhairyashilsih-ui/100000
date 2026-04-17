@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Pre-download the YOLO model so it doesn't download at runtime
-RUN python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+RUN python -c "from ultralytics import YOLO; YOLO('yolov8m.pt')"
 
 EXPOSE 8000
 
