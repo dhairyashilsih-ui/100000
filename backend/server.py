@@ -64,6 +64,13 @@ if ML_NODE_URL:
     model = None
 else:
     logger.info("Local ML Mode Enabled: Loading YOLO model...")
+    import torch
+    import torch.serialization
+    try:
+        import ultralytics.nn.tasks
+        torch.serialization.add_safe_globals([ultralytics.nn.tasks.DetectionModel])
+    except Exception:
+        pass
     from ultralytics import YOLO
     model = YOLO("yolov8m.pt")
     logger.info("YOLO medium model loaded for high accuracy.")
