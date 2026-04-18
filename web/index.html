@@ -149,7 +149,7 @@
                     <div id="videoContainer" class="relative w-full rounded-lg overflow-hidden bg-black flex-grow flex items-center justify-center border border-google-border" style="min-height: 60vh; transition: box-shadow 0.4s ease;">
                         <img id="videoStream"
                             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                            class="w-full h-full object-contain hidden" alt="Live Feed">
+                            class="w-full h-full object-cover hidden" alt="Live Feed" style="object-position: center;">
 
                         <!-- No Signal -->
                         <div id="noSignal" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-10 bg-gray-100">
@@ -178,7 +178,7 @@
                     </div>
                     <!-- Slightly smaller height for heatmap as it's secondary -->
                     <div id="heatmapContainer" class="relative w-full rounded-lg overflow-hidden bg-black flex items-center justify-center border border-google-border" style="min-height: 60vh;">
-                        <img id="heatmapStream" class="w-full h-full object-contain hidden" alt="Heatmap">
+                        <img id="heatmapStream" class="w-full h-full object-cover hidden" alt="Heatmap" style="object-position: center;">
                         <div id="heatmapNoSignal" class="absolute inset-0 flex items-center justify-center text-gray-500 text-sm bg-gray-100">
                             Waiting for heatmap telemetry stream...
                         </div>
