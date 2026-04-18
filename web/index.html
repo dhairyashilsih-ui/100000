@@ -149,7 +149,7 @@
                     <div id="videoContainer" class="relative w-full rounded-lg overflow-hidden bg-black flex-grow flex items-center justify-center border border-google-border" style="min-height: 60vh; transition: box-shadow 0.4s ease;">
                         <img id="videoStream"
                             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                            class="w-full h-full object-cover hidden" alt="Live Feed" style="object-position: center;">
+                            class="w-full h-full object-contain hidden" alt="Live Feed">
 
                         <!-- No Signal -->
                         <div id="noSignal" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-10 bg-gray-100">
@@ -170,15 +170,15 @@
                 </div>
 
                 <!-- Heatmap Feed -->
-                <div class="material-panel p-5 relative overflow-hidden">
+                <div class="material-panel p-5 relative">
                     <div class="flex items-center gap-2 mb-4">
                         <span class="w-2.5 h-2.5 rounded-full bg-google-red"></span>
                         <h2 class="text-base font-semibold text-google-textPrimary">Heatmap Density Analysis</h2>
                         <span class="text-xs text-google-textSecondary ml-auto bg-google-bg px-2 py-1 rounded">🔵 sparse → 🔴 dense</span>
                     </div>
                     <!-- Slightly smaller height for heatmap as it's secondary -->
-                    <div id="heatmapContainer" class="relative w-full rounded-lg overflow-hidden bg-black flex items-center justify-center border border-google-border" style="min-height: 60vh;">
-                        <img id="heatmapStream" class="w-full h-full object-cover hidden" alt="Heatmap" style="object-position: center;">
+                    <div id="heatmapContainer" class="relative w-full rounded-lg overflow-hidden bg-black border border-google-border" style="height: 60vh;">
+                        <img id="heatmapStream" class="absolute inset-0 w-full h-full object-contain hidden" alt="Heatmap">
                         <div id="heatmapNoSignal" class="absolute inset-0 flex items-center justify-center text-gray-500 text-sm bg-gray-100">
                             Waiting for heatmap telemetry stream...
                         </div>
