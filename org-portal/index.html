@@ -7,951 +7,602 @@
     <meta name="description" content="CrowdPulse enterprise organization portal — real-time AI crowd alerts, live monitoring and recording playback.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
 /* ── Reset & Base ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; }
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #060818;
-    color: #e2e8f0;
+    font-family: 'Google Sans', 'Inter', -apple-system, sans-serif;
+    background: #f8f9fa;
+    color: #202124;
     min-height: 100vh;
     line-height: 1.6;
-    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0d1117; }
-::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #4a5568; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f3f4; }
+::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
 
-/* ── Animated Background ─────────────────────────────────────────────────────── */
-body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: -1;
-    background:
-        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(99,102,241,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139,92,246,0.1) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(6,182,212,0.06) 0%, transparent 60%),
-        #060818;
-    animation: bgShift 15s ease-in-out infinite alternate;
-}
-@keyframes bgShift {
-    0%   { background-position: 20% 0%, 80% 100%, 50% 50%; }
-    100% { background-position: 25% 5%, 75% 95%, 55% 45%; }
-}
-
-/* ── Layout ──────────────────────────────────────────────────────────────────── */
-.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
-.main-content { max-width: 1480px; margin: 0 auto; padding: 0 1.5rem 4rem; width: 100%; }
-
-/* ── Glass Card ──────────────────────────────────────────────────────────────── */
-.glass {
-    background: rgba(15, 20, 40, 0.7);
-    border: 1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-.glass-light {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+/* ── Google Color Palette ─────────────────────────────────────────────────── */
+:root {
+    --blue:    #1a73e8;
+    --blue-l:  #e8f0fe;
+    --blue-d:  #1557b0;
+    --green:   #1e8e3e;
+    --green-l: #e6f4ea;
+    --yellow:  #f9ab00;
+    --yellow-l:#fef7e0;
+    --red:     #d93025;
+    --red-l:   #fce8e6;
+    --border:  #dadce0;
+    --text1:   #202124;
+    --text2:   #5f6368;
+    --text3:   #80868b;
+    --surface: #ffffff;
+    --bg:      #f8f9fa;
+    --shadow:  0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    --shadow-hover: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+    --radius:  12px;
+    --radius-sm: 8px;
 }
 
-/* ── TOP NAV ─────────────────────────────────────────────────────────────────── */
-.topnav {
+/* ── Top App Bar ──────────────────────────────────────────────────────────── */
+.topbar {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(6, 8, 24, 0.85);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    padding: 0 1.5rem;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
-.topnav-inner {
-    max-width: 1480px; margin: 0 auto;
+.topbar-inner {
+    max-width: 1400px; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between;
-    height: 64px; gap: 1.25rem;
+    height: 66px; padding: 0 1.5rem; gap: 1rem;
 }
-.brand {
-    display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
-    text-decoration: none;
-}
-.brand-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+
+/* Brand */
+.brand { display: flex; align-items: center; gap: 0.625rem; text-decoration: none; flex-shrink: 0; }
+.brand-logo {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: conic-gradient(#4285f4 0deg 90deg, #ea4335 90deg 180deg, #fbbc04 180deg 270deg, #34a853 270deg 360deg);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 20px rgba(99,102,241,0.4);
-    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
 }
-.brand-icon svg { width: 18px; height: 18px; color: #fff; }
-.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-.brand-name {
-    font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #a5b4fc, #e879f9);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+.brand-logo svg { width: 17px; height: 17px; color: #fff; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+.brand-name { font-size: 1.1rem; font-weight: 700; color: var(--text1); letter-spacing: -0.01em; }
+.brand-name span { color: var(--blue); }
+.brand-tag {
+    font-size: 0.6rem; font-weight: 700;
+    background: var(--blue-l); color: var(--blue);
+    border: 1px solid rgba(26,115,232,0.2);
+    padding: 0.15rem 0.5rem; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-left: 0.15rem;
 }
-.brand-sub { font-size: 0.65rem; color: #64748b; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
 
-.nav-connection {
-    display: flex; align-items: center; gap: 0.625rem; flex: 1; max-width: 520px;
+/* URL bar */
+.url-bar-wrap { flex: 1; max-width: 520px; position: relative; }
+.url-bar-icon {
+    position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+    color: var(--text3); pointer-events: none;
 }
-.nav-url-input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    color: #e2e8f0;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    padding: 0.525rem 0.875rem 0.525rem 2.5rem;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    min-width: 0;
+.url-bar-icon svg { width: 15px; height: 15px; display: block; }
+.url-bar {
+    width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+    border-radius: 24px; color: var(--text1); font-family: inherit; font-size: 0.85rem;
+    padding: 0.575rem 1rem 0.575rem 2.5rem; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
-.nav-url-input:focus {
-    border-color: rgba(99,102,241,0.6);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-    background: rgba(255,255,255,0.07);
-}
-.nav-url-input::placeholder { color: #475569; }
-.url-input-wrap { position: relative; flex: 1; min-width: 0; }
-.url-input-icon {
-    position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
-    color: #475569; pointer-events: none;
-}
-.url-input-icon svg { width: 14px; height: 14px; }
+.url-bar:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,115,232,0.14); background: #fff; }
+.url-bar::placeholder { color: var(--text3); }
 
-.conn-status-pill {
-    display: flex; align-items: center; gap: 0.45rem;
-    padding: 0.4rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    font-size: 0.75rem; font-weight: 600; color: #64748b;
-    white-space: nowrap; flex-shrink: 0;
-    transition: all 0.3s;
+/* Connection pill */
+.conn-pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 1rem; border-radius: 999px;
+    background: var(--bg); border: 1.5px solid var(--border);
+    font-size: 0.78rem; font-weight: 600; color: var(--text2);
+    white-space: nowrap; flex-shrink: 0; transition: all 0.3s;
 }
-.conn-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #374151; flex-shrink: 0;
-    transition: background 0.3s, box-shadow 0.3s;
-}
-.conn-dot.connected  { background: #10b981; box-shadow: 0 0 8px #10b981; }
-.conn-dot.connecting { background: #f59e0b; animation: dotPulse 1s infinite; }
-.conn-dot.error      { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.6); }
-@keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.conn-dot { width: 8px; height: 8px; border-radius: 50%; background: #bdc1c6; flex-shrink: 0; transition: all 0.3s; }
+.conn-dot.connected  { background: var(--green); box-shadow: 0 0 0 2px rgba(30,142,62,0.25); }
+.conn-dot.connecting { background: var(--yellow); animation: dotBlink 1s infinite; }
+.conn-dot.error      { background: var(--red); }
+@keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
 .btn {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.525rem 1.1rem;
-    border-radius: 10px; font-family: 'Inter', sans-serif;
-    font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none;
-    transition: all 0.2s ease; white-space: nowrap; text-decoration: none;
+    padding: 0.575rem 1.25rem; border-radius: 24px; border: none;
+    font-family: inherit; font-size: 0.84rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap; text-decoration: none;
+    transition: all 0.15s ease;
 }
 .btn:hover { transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-.btn-primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #fff;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.4);
-}
-.btn-primary:hover { box-shadow: 0 4px 20px rgba(99,102,241,0.6); }
-.btn-ghost {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #94a3b8;
-}
-.btn-ghost:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; }
-.btn-danger {
-    background: rgba(239,68,68,0.15);
-    border: 1px solid rgba(239,68,68,0.3);
-    color: #f87171;
-}
-.btn-danger:hover { background: rgba(239,68,68,0.25); }
-.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; border-radius: 8px; }
-.btn:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
+.btn:active { transform: none; }
+.btn-filled  { background: var(--blue); color: #fff; box-shadow: 0 1px 3px rgba(26,115,232,0.4); }
+.btn-filled:hover  { background: var(--blue-d); box-shadow: 0 2px 8px rgba(26,115,232,0.45); }
+.btn-tonal   { background: var(--blue-l); color: var(--blue); border: 1px solid rgba(26,115,232,0.15); }
+.btn-tonal:hover   { background: #d2e3fc; }
+.btn-outlined { background: transparent; color: var(--text2); border: 1.5px solid var(--border); }
+.btn-outlined:hover { background: var(--bg); color: var(--text1); border-color: #bdc1c6; }
+.btn-sm { padding: 0.42rem 1rem; font-size: 0.78rem; border-radius: 20px; }
+.btn:disabled { opacity: 0.45; pointer-events: none; }
 
-/* ── Stats Strip ─────────────────────────────────────────────────────────────── */
-.stats-strip {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
-    margin: 1.5rem 0;
-}
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.page-body { max-width: 1400px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+/* ── Stats Strip ──────────────────────────────────────────────────────────── */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
 .stat-card {
-    padding: 1.4rem 1.5rem;
-    border-radius: 16px;
-    position: relative; overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; box-shadow: var(--shadow);
+    transition: box-shadow 0.2s, transform 0.2s; cursor: default; position: relative; overflow: hidden;
 }
-.stat-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--card-glow, rgba(99,102,241,0.08));
-    opacity: 0; transition: opacity 0.3s;
-}
-.stat-card:hover { transform: translateY(-2px); }
-.stat-card:hover::before { opacity: 1; }
-.stat-card-icon {
-    width: 38px; height: 38px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem;
-    background: var(--icon-bg, rgba(99,102,241,0.15));
-    border: 1px solid var(--icon-border, rgba(99,102,241,0.25));
-}
-.stat-card-icon svg { width: 18px; height: 18px; color: var(--icon-color, #a5b4fc); }
-.stat-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #64748b; margin-bottom: 0.35rem; }
-.stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; color: #f1f5f9; transition: color 0.3s; }
-.stat-sub { font-size: 0.72rem; color: #475569; margin-top: 0.4rem; }
+.stat-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.stat-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem; }
+.stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.stat-icon svg { width: 20px; height: 20px; }
+.stat-trend { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px; }
+.stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 0.3rem; }
+.stat-value { font-size: 2.4rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: var(--text1); }
+.stat-sub   { font-size: 0.72rem; color: var(--text3); margin-top: 0.4rem; }
+.stat-bar   { height: 3px; border-radius: 2px; margin-top: 1rem; background: var(--bg); overflow: hidden; }
+.stat-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
 
-/* ── Tab Bar ─────────────────────────────────────────────────────────────────── */
-.tab-bar {
-    display: flex; align-items: center; gap: 0.25rem;
-    padding: 0.3rem;
-    border-radius: 14px;
-    margin-bottom: 1.5rem;
-    width: fit-content;
+/* ── Tab Row ──────────────────────────────────────────────────────────────── */
+.tab-row {
+    display: flex; gap: 0; border-bottom: 2px solid var(--border);
+    margin-bottom: 1.5rem; overflow-x: auto;
 }
 .tab-btn {
-    padding: 0.55rem 1.3rem;
-    border-radius: 10px; font-size: 0.825rem; font-weight: 600;
-    color: #64748b; cursor: pointer; border: none;
-    background: transparent; font-family: 'Inter', sans-serif;
-    transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.875rem 1.5rem; border: none; background: transparent;
+    font-family: inherit; font-size: 0.875rem; font-weight: 600; color: var(--text2);
+    cursor: pointer; white-space: nowrap; position: relative;
+    border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.15s;
 }
-.tab-btn:hover { color: #94a3b8; background: rgba(255,255,255,0.04); }
-.tab-btn.active {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #fff;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.4);
-}
+.tab-btn:hover { color: var(--blue); background: var(--blue-l); border-radius: 8px 8px 0 0; }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 .tab-count {
     display: inline-flex; align-items: center; justify-content: center;
-    background: rgba(239,68,68,0.85); color: #fff;
-    font-size: 0.62rem; font-weight: 700; border-radius: 999px;
-    padding: 0 0.35rem; min-width: 1.1rem; height: 1.1rem;
+    background: var(--red); color: #fff; border-radius: 999px;
+    font-size: 0.62rem; font-weight: 700; padding: 0 0.35rem; min-width: 1.1rem; height: 1.1rem;
 }
-.tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
 
-/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
 .toolbar {
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;
-    padding: 0.875rem 1.25rem;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.05);
 }
 .toolbar-left { display: flex; align-items: center; gap: 0.625rem; }
-.section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #475569; }
-.poll-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #10b981; animation: pollBlink 2s infinite;
-}
-@keyframes pollBlink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.poll-label { font-size: 0.7rem; color: #475569; }
+.section-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); }
+.live-indicator { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--text3); }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: ldot 2s infinite; }
+@keyframes ldot { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-/* ── Report Cards ────────────────────────────────────────────────────────────── */
+/* ── Report Cards ─────────────────────────────────────────────────────────── */
 #reportsContainer, #allReportsContainer { display: flex; flex-direction: column; gap: 0.75rem; }
-
 .report-card {
-    border-radius: 14px;
-    padding: 1.25rem 1.5rem;
-    position: relative; overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    animation: cardSlideIn 0.3s ease;
-    cursor: default;
-    background: rgba(15, 20, 40, 0.6);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem 1.25rem 1.75rem;
+    box-shadow: var(--shadow); position: relative; overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s; animation: slideUp 0.3s ease;
 }
-@keyframes cardSlideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-.report-card:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.1); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
-.report-card .status-accent {
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; border-radius: 14px 0 0 14px;
-}
-.report-card.status-GREEN  .status-accent { background: linear-gradient(180deg, #10b981, #059669); box-shadow: 2px 0 12px rgba(16,185,129,0.3); }
-.report-card.status-YELLOW .status-accent { background: linear-gradient(180deg, #f59e0b, #d97706); box-shadow: 2px 0 12px rgba(245,158,11,0.3); }
-.report-card.status-RED    .status-accent { background: linear-gradient(180deg, #ef4444, #dc2626); box-shadow: 2px 0 12px rgba(239,68,68,0.3); }
-.report-card.status-GREEN  { border-left: none; }
-.report-card.status-YELLOW { border-left: none; }
-.report-card.status-RED    { border-left: none; }
+@keyframes slideUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.report-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.accent-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 12px 0 0 12px; }
+.report-card.status-GREEN  .accent-bar { background: var(--green); }
+.report-card.status-YELLOW .accent-bar { background: var(--yellow); }
+.report-card.status-RED    .accent-bar { background: var(--red); }
 
-.report-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+.report-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem; flex-wrap: wrap; gap: 0.5rem; }
 .report-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .status-chip {
     display: inline-flex; align-items: center; gap: 0.3rem;
     padding: 0.2rem 0.65rem; border-radius: 999px;
-    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
 }
-.status-chip.GREEN  { background: rgba(16,185,129,0.15);  border: 1px solid rgba(16,185,129,0.35);  color: #34d399; }
-.status-chip.YELLOW { background: rgba(245,158,11,0.15);  border: 1px solid rgba(245,158,11,0.35);  color: #fbbf24; }
-.status-chip.RED    { background: rgba(239,68,68,0.15);   border: 1px solid rgba(239,68,68,0.35);   color: #f87171; }
-.session-chip {
-    font-size: 0.68rem; font-weight: 600; color: #64748b;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    background: rgba(255,255,255,0.04); padding: 0.15rem 0.5rem;
-    border-radius: 6px; border: 1px solid rgba(255,255,255,0.07);
-}
-.unread-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #818cf8; box-shadow: 0 0 6px rgba(129,140,248,0.8); flex-shrink: 0;
-}
-.report-time { font-size: 0.7rem; color: #475569; font-family: monospace; }
-.report-body { font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 0.875rem; }
-.report-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 0.5rem; padding-top: 0.75rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
-}
-.avg-count-label { font-size: 0.7rem; color: #475569; }
-.avg-count-label span { font-weight: 700; color: #94a3b8; }
+.status-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.status-chip.GREEN  { background: var(--green-l);  color: var(--green);  border: 1px solid rgba(30,142,62,.2);  }
+.status-chip.GREEN::before  { background: var(--green); }
+.status-chip.YELLOW { background: var(--yellow-l); color: #b06000; border: 1px solid rgba(249,171,0,.3); }
+.status-chip.YELLOW::before { background: var(--yellow); }
+.status-chip.RED    { background: var(--red-l);    color: var(--red);    border: 1px solid rgba(217,48,37,.2);   }
+.status-chip.RED::before    { background: var(--red); }
+.session-chip { font-size: 0.7rem; font-weight: 600; color: var(--text3); font-family: monospace; background: var(--bg); padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); }
+.unread-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 2px rgba(26,115,232,.2); flex-shrink: 0; }
+.report-time { font-size: 0.72rem; color: var(--text3); }
+.report-body { font-size: 0.88rem; color: var(--text2); line-height: 1.7; margin-bottom: 0.875rem; }
+.report-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--bg); }
+.avg-count-label { font-size: 0.72rem; color: var(--text3); }
+.avg-count-label span { font-weight: 700; color: var(--text2); }
 
-/* ── High Alert Banner ───────────────────────────────────────────────────────── */
+/* ── Banner ───────────────────────────────────────────────────────────────── */
 #highAlertsBanner {
     display: none;
-    background: rgba(239,68,68,0.08);
-    border: 1px solid rgba(239,68,68,0.25);
-    border-radius: 14px;
-    margin-bottom: 1rem;
-    padding: 1rem 1.25rem;
+    background: var(--red-l); border: 1px solid rgba(217,48,37,.25);
+    border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem;
 }
-.high-alert-header {
-    display: flex; align-items: center; gap: 0.5rem;
-    color: #f87171; font-weight: 700; font-size: 0.8rem;
-    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;
-}
-.high-alert-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
-    animation: pulseDanger 1.5s infinite;
-}
-@keyframes pulseDanger { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.7} }
+.banner-head { display: flex; align-items: center; gap: 0.5rem; color: var(--red); font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.banner-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: bP 1.2s infinite; }
+@keyframes bP { 0%,100%{transform:scale(1)} 50%{transform:scale(1.5)} }
 
-/* ── Recording Panel ─────────────────────────────────────────────────────────── */
-.player-top-bar {
-    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
-    padding: 1rem 1.25rem; border-radius: 14px; margin-bottom: 1.25rem;
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.06);
-}
-.rec-select {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
-    font-size: 0.82rem; padding: 0.5rem 0.875rem; outline: none;
-    width: 230px; cursor: pointer; transition: border-color 0.2s;
-}
-.rec-select:focus { border-color: rgba(99,102,241,0.6); }
-.date-range-wrap { display: flex; align-items: center; gap: 0.5rem; }
-.date-input {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
-    font-size: 0.78rem; padding: 0.5rem 0.75rem; outline: none; width: 185px;
-    transition: border-color 0.2s; color-scheme: dark;
-}
-.date-input:focus { border-color: rgba(99,102,241,0.6); }
-.date-sep { color: #475569; font-size: 0.9rem; }
-.rec-info-label { font-size: 0.78rem; color: #818cf8; font-weight: 600; }
+/* ── Recording Panel ──────────────────────────────────────────────────────── */
+.player-top-bar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); }
+.rec-select, .date-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text1); font-family: inherit; font-size: 0.82rem; padding: 0.5rem 0.875rem; outline: none; transition: border-color .2s, box-shadow .2s; }
+.rec-select:focus, .date-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,115,232,.12); }
+.rec-select { width: 220px; }
+.date-input { width: 185px; }
+.date-sep { color: var(--text3); }
+.rec-info-label { font-size: 0.78rem; color: var(--blue); font-weight: 600; }
 
-.player-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; margin-bottom: 0.875rem; }
-.player-video-container {
-    position: relative; background: #000;
-    border-radius: 14px; overflow: hidden;
-    aspect-ratio: 16/9;
-    border: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
-}
+.player-layout { display: grid; grid-template-columns: 1fr 270px; gap: 1.25rem; margin-bottom: 1rem; }
+.player-video-container { position: relative; background: #111; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; }
 .playback-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .playback-img.hidden { display: none; }
-.player-placeholder {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.75rem; color: #374151; text-align: center; padding: 2rem; position: absolute; inset: 0;
-}
-.player-placeholder svg { opacity: 0.3; }
-.player-placeholder span { font-size: 0.85rem; }
-.player-overlay {
-    position: absolute; bottom: 0.875rem; left: 0.875rem;
-    display: flex; gap: 0.5rem; align-items: center; pointer-events: none;
-}
-.pb-status-chip {
-    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); color: #f1f5f9;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.pb-count-chip {
-    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); color: #94a3b8;
-    border: 1px solid rgba(255,255,255,0.08);
-}
-.pb-time-label { font-size: 0.68rem; font-family: monospace; color: rgba(255,255,255,0.5); }
-.pb-loading {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
-}
+.player-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; color: #888; text-align: center; padding: 2rem; position: absolute; inset: 0; }
+.player-placeholder svg { opacity: 0.3; color: #9aa0a6; }
+.player-placeholder span { font-size: 0.82rem; }
+.player-overlay { position: absolute; bottom: 0.75rem; left: 0.75rem; display: flex; gap: 0.5rem; align-items: center; pointer-events: none; }
+.pb-chip { padding: .22rem .65rem; border-radius: 999px; font-size: .7rem; font-weight: 700; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); color: #fff; }
+.pb-time-label { font-size: .66rem; font-family: monospace; color: rgba(255,255,255,.6); }
+.pb-loading { position: absolute; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
 .pb-loading.hidden { display: none; }
+.player-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 1rem; }
+.sidebar-stat { display: flex; flex-direction: column; gap: 0.2rem; }
+.sidebar-stat-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); }
+.sidebar-stat-value { font-size: 1rem; font-weight: 700; color: var(--text2); }
+.sidebar-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: .5rem; }
+.speed-select { background: var(--bg); border: 1.5px solid var(--border); color: var(--text1); border-radius: 8px; padding: .3rem .5rem; font-family: inherit; font-size: .8rem; outline: none; cursor: pointer; }
 
-/* Sidebar */
-.player-sidebar {
-    border-radius: 14px; padding: 1.25rem;
-    display: flex; flex-direction: column; gap: 1rem;
-    background: rgba(15,20,40,0.6); border: 1px solid rgba(255,255,255,0.06);
-}
-.sidebar-stat { display: flex; flex-direction: column; gap: 0.25rem; }
-.sidebar-stat-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #475569; }
-.sidebar-stat-value { font-size: 1rem; font-weight: 700; color: #94a3b8; }
-.sidebar-card {
-    border-radius: 14px; padding: 1rem;
-    display: flex; flex-direction: column; gap: 0.4rem;
-    background: rgba(15,20,40,0.6); border: 1px solid rgba(255,255,255,0.06);
-}
-.speed-select {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    color: #e2e8f0; border-radius: 8px; padding: 0.3rem 0.5rem;
-    font-size: 0.8rem; outline: none; cursor: pointer; font-family: 'Inter', sans-serif;
-}
+.timeline-wrap { display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+.timeline-label { font-size: .62rem; color: var(--text3); font-family: monospace; white-space: nowrap; min-width: 55px; }
+.timeline-bar { flex: 1; height: 20px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; display: flex; cursor: pointer; }
+.timeline-bar:hover { border-color: #bdc1c6; }
+.timeline-seg { height: 100%; flex: 1; min-width: 1px; transition: opacity .1s; }
+.timeline-seg:hover { opacity: .75; }
+.timeline-seg.current { outline: 2px solid white; }
+.player-controls { display: flex; align-items: center; justify-content: center; gap: .5rem; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: .875rem; box-shadow: var(--shadow); }
 
-/* Timeline */
-.timeline-wrap { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.875rem; }
-.timeline-label { font-size: 0.62rem; color: #475569; font-family: monospace; white-space: nowrap; min-width: 55px; }
-.timeline-bar {
-    flex: 1; height: 22px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 6px; overflow: hidden; display: flex; cursor: pointer; position: relative;
-}
-.timeline-bar:hover { border-color: rgba(255,255,255,0.12); }
-.timeline-seg { height: 100%; flex: 1; min-width: 1px; transition: opacity 0.1s; position: relative; }
-.timeline-seg:hover { opacity: 0.75; }
-.timeline-seg.current::after {
-    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 2px; height: 100%; background: rgba(255,255,255,0.9); opacity: 0.9;
-}
-.player-controls {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0.5rem; flex-wrap: wrap;
-    padding: 0.875rem 1.25rem; border-radius: 14px;
-    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05);
-}
+/* ── Live Panel ───────────────────────────────────────────────────────────── */
+.live-connect-bar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); }
+.live-code-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text1); font-family: 'SF Mono', monospace; font-size: 1rem; font-weight: 700; letter-spacing: .14em; padding: .5rem .875rem; width: 164px; outline: none; text-transform: uppercase; transition: border-color .2s, box-shadow .2s; }
+.live-code-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,115,232,.12); }
+.live-code-input::placeholder { letter-spacing: 0; font-weight: 400; color: var(--text3); font-family: inherit; font-size: .84rem; }
+.status-badge-conn { display: flex; align-items: center; gap: .5rem; padding: .45rem 1rem; border-radius: 999px; background: var(--bg); border: 1.5px solid var(--border); font-size: .78rem; font-weight: 600; color: var(--text2); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #bdc1c6; flex-shrink: 0; transition: all .3s; }
+.status-dot.connected  { background: var(--green); box-shadow: 0 0 0 2px rgba(30,142,62,.25); }
+.status-dot.connecting { background: var(--yellow); animation: dotBlink 1s infinite; }
+.status-dot.error      { background: var(--red); }
 
-/* ── Live Panel ──────────────────────────────────────────────────────────────── */
-.live-connect-bar {
-    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
-    padding: 1rem 1.25rem; border-radius: 14px; margin-bottom: 1.25rem;
-    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
-}
-.live-session-input {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 9px; color: #e2e8f0; font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.12em;
-    padding: 0.525rem 0.875rem; width: 180px; outline: none; text-transform: uppercase;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.live-session-input:focus {
-    border-color: rgba(99,102,241,0.6); box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-}
-.live-session-input::placeholder { color: #374151; font-weight: 400; letter-spacing: 0; }
-
-.live-layout { display: grid; grid-template-columns: 1fr 360px; gap: 1.25rem; }
-
-.live-video-container {
-    position: relative; background: #000;
-    border-radius: 16px; overflow: hidden;
-    aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; justify-content: center;
-    transition: box-shadow 0.4s ease;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
-}
+.live-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.25rem; }
+.live-video-container { position: relative; background: #111; border-radius: 14px; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,.1); transition: box-shadow .4s; }
 .live-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .live-img.hidden { display: none; }
-.live-badges { position: absolute; top: 0.875rem; left: 0.875rem; display: flex; gap: 0.5rem; align-items: center; }
-.live-badge {
-    padding: 0.25rem 0.7rem; border-radius: 999px;
-    background: rgba(239,68,68,0.85); backdrop-filter: blur(6px);
-    color: #fff; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
-    border: 1px solid rgba(255,255,255,0.15);
-    animation: pulseLive 1.5s ease-in-out infinite;
-}
+.live-badges { position: absolute; top: .75rem; left: .75rem; display: flex; gap: .5rem; align-items: center; }
+.live-badge { padding: .22rem .65rem; border-radius: 999px; background: rgba(217,48,37,.9); color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .05em; animation: lbPulse 1.5s infinite; }
 .live-badge.hidden { display: none; }
-@keyframes pulseLive { 0%,100%{opacity:1} 50%{opacity:0.7} }
-.live-status-chip {
-    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9;
-}
+@keyframes lbPulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+.live-status-chip { padding: .22rem .65rem; border-radius: 999px; font-size: .68rem; font-weight: 700; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); color: #fff; }
 .live-status-chip.hidden { display: none; }
-.live-reconnecting {
-    position: absolute; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.75rem; color: #94a3b8; font-size: 0.875rem;
-}
+.live-reconnecting { position: absolute; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; color: #9aa0a6; font-size: .875rem; }
 .live-reconnecting.hidden { display: none; }
 
 .live-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+.live-count-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+.live-count-card::after { content: ''; position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(26,115,232,.07), transparent 70%); }
+.live-count-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: .5rem; }
+.live-count-display { font-size: 4.5rem; font-weight: 900; line-height: 1; color: var(--text1); letter-spacing: -.05em; margin-bottom: .5rem; transition: color .3s; }
+.live-status-large { font-size: .875rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); transition: color .3s; }
+.threshold-legend { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+.th-pill { font-size: .68rem; font-weight: 700; padding: .25rem .65rem; border-radius: 999px; }
+.th-pill.green  { background: var(--green-l);  color: var(--green);  border: 1px solid rgba(30,142,62,.25); }
+.th-pill.yellow { background: var(--yellow-l); color: #b06000;        border: 1px solid rgba(249,171,0,.3); }
+.th-pill.red    { background: var(--red-l);    color: var(--red);     border: 1px solid rgba(217,48,37,.2); }
 
-.live-count-card {
-    padding: 1.5rem;
-    border-radius: 16px;
-    background: rgba(15,20,40,0.7);
-    border: 1px solid rgba(255,255,255,0.06);
-    position: relative; overflow: hidden;
-}
-.live-count-card::before {
-    content: ''; position: absolute;
-    top: -40px; right: -40px;
-    width: 120px; height: 120px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
-    pointer-events: none;
-}
-.live-count-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #475569; margin-bottom: 0.5rem; }
-.live-count-display {
-    font-size: 4rem; font-weight: 900; color: #f1f5f9; line-height: 1;
-    letter-spacing: -0.04em; margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, #f1f5f9, #94a3b8);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    transition: all 0.3s;
-}
-.live-status-large {
-    font-size: 0.88rem; font-weight: 800; letter-spacing: 0.1em;
-    text-transform: uppercase; color: #64748b;
-    transition: color 0.3s;
-}
-.threshold-legend { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
-.th-pill {
-    font-size: 0.65rem; font-weight: 700; padding: 0.25rem 0.6rem;
-    border-radius: 999px; letter-spacing: 0.03em;
-}
-.th-pill.green  { background: rgba(16,185,129,0.12);  color: #34d399;  border: 1px solid rgba(16,185,129,0.25);  }
-.th-pill.yellow { background: rgba(245,158,11,0.12);  color: #fbbf24;  border: 1px solid rgba(245,158,11,0.25);  }
-.th-pill.red    { background: rgba(239,68,68,0.12);   color: #f87171;  border: 1px solid rgba(239,68,68,0.25);   }
+.live-video-container.status-GREEN  { box-shadow: 0 0 0 3px #34a853, 0 4px 20px rgba(52,168,83,.2); }
+.live-video-container.status-YELLOW { box-shadow: 0 0 0 3px #fbbc04, 0 4px 20px rgba(251,188,4,.2); }
+.live-video-container.status-RED    { box-shadow: 0 0 0 3px #ea4335, 0 4px 28px rgba(234,67,53,.25); animation: redRing 1.8s ease-in-out infinite; }
+@keyframes redRing { 0%,100%{box-shadow:0 0 0 3px #ea4335,0 4px 24px rgba(234,67,53,.2)} 50%{box-shadow:0 0 0 4px #ea4335,0 4px 40px rgba(234,67,53,.4)} }
 
-/* Status glow on live video */
-.live-video-container.status-GREEN  { box-shadow: 0 0 0 2px rgba(16,185,129,0.6), 0 0 40px rgba(16,185,129,0.2); }
-.live-video-container.status-YELLOW { box-shadow: 0 0 0 2px rgba(245,158,11,0.6), 0 0 40px rgba(245,158,11,0.2); }
-.live-video-container.status-RED    { box-shadow: 0 0 0 2px rgba(239,68,68,0.7), 0 0 50px rgba(239,68,68,0.3); animation: redGlow 1.8s ease-in-out infinite; }
-@keyframes redGlow {
-    0%,100% { box-shadow: 0 0 0 2px rgba(239,68,68,0.7), 0 0 40px rgba(239,68,68,0.25); }
-    50%      { box-shadow: 0 0 0 3px rgba(239,68,68,0.9), 0 0 70px rgba(239,68,68,0.45); }
-}
-
-/* AI Panel */
-.live-llm-panel {
-    padding: 1.25rem; border-radius: 16px;
-    background: rgba(99,102,241,0.06);
-    border: 1px solid rgba(99,102,241,0.2);
-    position: relative; overflow: hidden;
-}
-.live-llm-panel::before {
-    content: ''; position: absolute;
-    bottom: -30px; left: -30px;
-    width: 100px; height: 100px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%);
-    pointer-events: none;
-}
-.live-llm-panel.hidden { display: none; }
-.live-llm-header {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 0.7rem; font-weight: 700; color: #818cf8;
-    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;
-}
-.live-llm-header-left { display: flex; align-items: center; gap: 0.4rem; }
-.live-llm-text { font-size: 0.84rem; color: #94a3b8; line-height: 1.7; }
-.speak-badge {
-    font-size: 0.65rem; font-weight: 800; color: #a5b4fc;
-    background: rgba(99,102,241,0.2); padding: 0.2rem 0.55rem;
-    border-radius: 999px; border: 1px solid rgba(99,102,241,0.3);
-    animation: speakPulse 0.8s ease-in-out infinite;
-}
+/* LLM Card */
+.llm-card { background: var(--blue-l); border: 1px solid rgba(26,115,232,.2); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+.llm-card.hidden { display: none; }
+.llm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+.llm-header-title { display: flex; align-items: center; gap: .4rem; font-size: .72rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .06em; }
+.llm-header-title svg { width: 14px; height: 14px; }
+.llm-text { font-size: .875rem; color: var(--text1); line-height: 1.7; }
+.speak-badge { font-size: .66rem; font-weight: 700; color: var(--blue); background: rgba(26,115,232,.15); border: 1px solid rgba(26,115,232,.2); padding: .2rem .55rem; border-radius: 999px; animation: sp 0.8s ease-in-out infinite; }
 .speak-badge.hidden { display: none; }
-@keyframes speakPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.96)} }
+@keyframes sp { 0%,100%{opacity:1} 50%{opacity:.5} }
 
-/* ── Empty State ─────────────────────────────────────────────────────────────── */
-.empty-state {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 5rem 2rem; color: #374151; text-align: center; gap: 1rem;
-    border-radius: 16px; border: 1px dashed rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.01);
-}
-.empty-state svg { opacity: 0.2; }
-.empty-state p { font-size: 0.9rem; color: #475569; }
-.empty-state strong { color: #818cf8; }
+/* ── Empty State ──────────────────────────────────────────────────────────── */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; color: var(--text3); text-align: center; gap: 1rem; background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius); }
+.empty-state svg { opacity: 0.28; color: #9aa0a6; }
+.empty-state p { font-size: .88rem; color: var(--text3); }
+.empty-state strong { color: var(--blue); font-weight: 600; }
 
-/* ── Spinner ─────────────────────────────────────────────────────────────────── */
+/* ── Spinner / Toast ──────────────────────────────────────────────────────── */
 .spinner-wrap { display: flex; justify-content: center; padding: 3rem; }
-.spinner {
-    width: 32px; height: 32px;
-    border: 2.5px solid rgba(255,255,255,0.07);
-    border-top-color: #6366f1;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-}
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .75s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Toast ───────────────────────────────────────────────────────────────────── */
-#toast {
-    position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
-    padding: 0.875rem 1.25rem; border-radius: 12px;
-    background: rgba(15,20,40,0.95); backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.1);
-    font-size: 0.82rem; color: #e2e8f0; font-family: 'Inter', sans-serif;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    opacity: 0; transform: translateY(1rem);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    pointer-events: none;
-}
+#toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; padding: .875rem 1.25rem; border-radius: var(--radius-sm); background: #202124; color: #fff; font-family: inherit; font-size: .84rem; box-shadow: 0 8px 30px rgba(0,0,0,.2); opacity: 0; transform: translateY(1rem); transition: opacity .3s, transform .3s; pointer-events: none; }
 #toast.show { opacity: 1; transform: translateY(0); }
 
-/* ── Utilities ───────────────────────────────────────────────────────────────── */
+/* ── Helpers ──────────────────────────────────────────────────────────────── */
 .hidden { display: none !important; }
-.url-input { /* alias for compatibility */
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
-    font-size: 0.82rem; padding: 0.5rem 0.875rem; width: 260px; outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.url-input:focus { border-color: rgba(99,102,241,0.6); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
-.url-input::placeholder { color: #374151; }
-
-/* stat-badge-conn alias */
-.status-badge-conn {
-    display: flex; align-items: center; gap: 0.45rem;
-    padding: 0.4rem 0.9rem; border-radius: 999px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    font-size: 0.75rem; font-weight: 600; color: #64748b; white-space: nowrap;
-}
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #374151; flex-shrink: 0; transition: all 0.3s; }
-.status-dot.connected  { background: #10b981; box-shadow: 0 0 8px #10b981; }
-.status-dot.connecting { background: #f59e0b; animation: dotPulse 1s infinite; }
-.status-dot.error      { background: #ef4444; }
-
-@media (max-width: 900px) {
-    .stats-strip { grid-template-columns: repeat(2, 1fr); }
-    .player-layout { grid-template-columns: 1fr; }
-    .live-layout { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-    .stats-strip { grid-template-columns: 1fr 1fr; }
-    .topnav-inner { height: auto; padding: 0.75rem 0; flex-wrap: wrap; }
-    .nav-connection { width: 100%; }
-}
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.2)} }
+.url-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text1); font-family: inherit; font-size: .82rem; padding: .5rem .875rem; width: 260px; outline: none; transition: border-color .2s, box-shadow .2s; }
+.url-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,115,232,.12); }
+.url-input::placeholder { color: var(--text3); }
+@media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2,1fr); } .player-layout, .live-layout { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } .topbar-inner { flex-wrap: wrap; height: auto; padding-top: .75rem; padding-bottom: .75rem; } .tab-btn { padding: .75rem 1rem; font-size: .78rem; } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
     </style>
 </head>
 <body>
-<div class="app-shell">
 
-    <!-- ── Top Navigation ───────────────────────────────────────────────────── -->
-    <nav class="topnav">
-        <div class="topnav-inner">
-            <!-- Brand -->
-            <a class="brand" href="#">
-                <div class="brand-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7
-                            -1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <span class="brand-name">CrowdPulse Org</span>
-                    <span class="brand-sub">Intelligence Portal</span>
-                </div>
-            </a>
+<!-- ── Top App Bar ───────────────────────────────────────────────────────── -->
+<nav class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="#">
+            <div class="brand-logo">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </div>
+            <span class="brand-name">CrowdPulse <span>Org</span></span>
+            <span class="brand-tag">Enterprise</span>
+        </a>
 
-            <!-- Connection Bar -->
-            <div class="nav-connection">
-                <div class="url-input-wrap">
-                    <span class="url-input-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </span>
-                    <input
-                        id="backendUrlInput"
-                        class="nav-url-input"
-                        type="text"
-                        placeholder="Backend URL (e.g. one00000.onrender.com)"
-                        autocomplete="off" spellcheck="false"
-                    />
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="saveAndConnect()">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    Connect
-                </button>
-                <div class="conn-status-pill">
-                    <div id="connDot" class="conn-dot"></div>
-                    <span id="connLabel">Not connected</span>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ── Main Content ─────────────────────────────────────────────────────── -->
-    <div class="main-content">
-
-        <!-- Stats Strip -->
-        <div class="stats-strip">
-            <div class="stat-card glass" style="--card-glow:rgba(129,140,248,0.08); --icon-bg:rgba(129,140,248,0.12); --icon-border:rgba(129,140,248,0.25); --icon-color:#a5b4fc;">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                </div>
-                <div class="stat-label">Unread Alerts</div>
-                <div id="statUnread" class="stat-value">—</div>
-                <div class="stat-sub">Pending review</div>
-            </div>
-            <div class="stat-card glass" style="--card-glow:rgba(16,185,129,0.08); --icon-bg:rgba(16,185,129,0.12); --icon-border:rgba(16,185,129,0.25); --icon-color:#34d399;">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </div>
-                <div class="stat-label">Reports Today</div>
-                <div id="statToday" class="stat-value">—</div>
-                <div class="stat-sub">Last 24 hours</div>
-            </div>
-            <div class="stat-card glass" style="--card-glow:rgba(239,68,68,0.08); --icon-bg:rgba(239,68,68,0.12); --icon-border:rgba(239,68,68,0.25); --icon-color:#f87171;">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                </div>
-                <div class="stat-label">Highest Status</div>
-                <div id="statHighest" class="stat-value">—</div>
-                <div class="stat-sub">Since last refresh</div>
-            </div>
-            <div class="stat-card glass" style="--card-glow:rgba(245,158,11,0.08); --icon-bg:rgba(245,158,11,0.12); --icon-border:rgba(245,158,11,0.25); --icon-color:#fbbf24;">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </div>
-                <div class="stat-label">Avg Crowd Count</div>
-                <div id="statAvg" class="stat-value">—</div>
-                <div class="stat-sub">Across all reports</div>
-            </div>
+        <div class="url-bar-wrap">
+            <span class="url-bar-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </span>
+            <input id="backendUrlInput" class="url-bar" type="text"
+                placeholder="Backend URL (e.g. one00000.onrender.com)" autocomplete="off" spellcheck="false"/>
         </div>
 
-        <!-- Tab Bar -->
-        <div class="tab-bar glass">
-            <button id="tabUnread" class="tab-btn active" role="tab" onclick="showTab('unread')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                Unread
-                <span id="unreadCount" class="tab-count" style="display:none;"></span>
+        <div style="display:flex;align-items:center;gap:.625rem;flex-shrink:0;">
+            <button class="btn btn-filled btn-sm" onclick="saveAndConnect()">
+                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Connect
             </button>
-            <button id="tabAll" class="tab-btn" role="tab" onclick="showTab('all')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                All Reports
-            </button>
-            <button id="tabRecording" class="tab-btn" role="tab" onclick="showTab('recording')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                Recordings
-            </button>
-            <button id="tabLive" class="tab-btn" role="tab" onclick="showTab('live')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-                Live
-            </button>
-        </div>
-
-        <!-- ── Unread Panel ─────────────────────────────────────────────────── -->
-        <div id="panelUnread">
-            <div class="toolbar">
-                <div class="toolbar-left">
-                    <span class="section-label">Live Alerts</span>
-                    <div class="poll-dot"></div>
-                    <span id="pollIndicator" class="poll-label">polling every 10s</span>
-                </div>
-                <div style="display:flex; gap:0.5rem;">
-                    <button class="btn btn-ghost btn-sm" onclick="fetchUnread()">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                        Refresh
-                    </button>
-                    <button id="markAllBtn" class="btn btn-ghost btn-sm" onclick="markAllRead()" style="display:none;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        Mark All Read
-                    </button>
-                </div>
-            </div>
-
-            <!-- High Alerts Banner -->
-            <div id="highAlertsBanner">
-                <div class="high-alert-header">
-                    <div class="high-alert-dot"></div>
-                    Critical Alerts Escalating
-                </div>
-                <div id="highAlertsContent" style="display:flex; flex-direction:column; gap:0.625rem;"></div>
-            </div>
-
-            <div id="reportsContainer">
-                <div class="empty-state">
-                    <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <p>Enter your backend URL above and click <strong>Connect</strong> to start receiving alerts.</p>
-                </div>
+            <div class="conn-pill">
+                <div id="connDot" class="conn-dot"></div>
+                <span id="connLabel">Not connected</span>
             </div>
         </div>
+    </div>
+</nav>
 
-        <!-- ── All Reports Panel ────────────────────────────────────────────── -->
-        <div id="panelAll" style="display:none;">
-            <div class="toolbar">
-                <span class="section-label">Full Report History</span>
-                <button class="btn btn-ghost btn-sm" onclick="fetchAll()">
+<!-- ── Page Body ─────────────────────────────────────────────────────────── -->
+<div class="page-body">
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <div class="stat-icon" style="background:#e8f0fe;"><svg fill="none" stroke="#1a73e8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+                <span class="stat-trend" style="background:#e8f0fe;color:#1a73e8;">Alerts</span>
+            </div>
+            <div class="stat-label">Unread Alerts</div>
+            <div id="statUnread" class="stat-value">—</div>
+            <div class="stat-sub">Pending review</div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="background:#1a73e8;width:60%;"></div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <div class="stat-icon" style="background:#e6f4ea;"><svg fill="none" stroke="#1e8e3e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+                <span class="stat-trend" style="background:#e6f4ea;color:#1e8e3e;">24h</span>
+            </div>
+            <div class="stat-label">Reports Today</div>
+            <div id="statToday" class="stat-value">—</div>
+            <div class="stat-sub">Last 24 hours</div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="background:#1e8e3e;width:40%;"></div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <div class="stat-icon" style="background:#fce8e6;"><svg fill="none" stroke="#d93025" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+                <span class="stat-trend" style="background:#fce8e6;color:#d93025;">Critical</span>
+            </div>
+            <div class="stat-label">Highest Status</div>
+            <div id="statHighest" class="stat-value">—</div>
+            <div class="stat-sub">Since last refresh</div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="background:#d93025;width:25%;"></div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <div class="stat-icon" style="background:#fef7e0;"><svg fill="none" stroke="#f9ab00" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                <span class="stat-trend" style="background:#fef7e0;color:#b06000;">Avg</span>
+            </div>
+            <div class="stat-label">Avg Crowd Count</div>
+            <div id="statAvg" class="stat-value">—</div>
+            <div class="stat-sub">Across all reports</div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="background:#f9ab00;width:50%;"></div></div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-row">
+        <button id="tabUnread"    class="tab-btn active" onclick="showTab('unread')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            Unread <span id="unreadCount" class="tab-count" style="display:none;"></span>
+        </button>
+        <button id="tabAll"       class="tab-btn" onclick="showTab('all')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            All Reports
+        </button>
+        <button id="tabRecording" class="tab-btn" onclick="showTab('recording')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            Recordings
+        </button>
+        <button id="tabLive"      class="tab-btn" onclick="showTab('live')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+            Live Feed
+        </button>
+    </div>
+
+    <!-- Unread Panel -->
+    <div id="panelUnread">
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <span class="section-label">Live Alerts</span>
+                <div class="live-indicator"><div class="live-dot"></div><span id="pollIndicator">polling every 10s</span></div>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+                <button class="btn btn-outlined btn-sm" onclick="fetchUnread()">
                     <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     Refresh
                 </button>
-            </div>
-            <div id="allReportsContainer">
-                <div class="empty-state"><p>No reports loaded yet.</p></div>
-            </div>
-        </div>
-
-        <!-- ── Recordings Panel ─────────────────────────────────────────────── -->
-        <div id="panelRecording" style="display:none;">
-            <div class="player-top-bar">
-                <select id="recordingSession" class="rec-select url-input" onchange="onSessionChange()">
-                    <option value="">— Select Session —</option>
-                </select>
-                <div class="date-range-wrap">
-                    <input type="datetime-local" id="recordingStart" class="date-input" title="Start time (optional)">
-                    <span class="date-sep">→</span>
-                    <input type="datetime-local" id="recordingEnd" class="date-input" title="End time (optional)">
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="loadRecording()">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Load Frames
+                <button id="markAllBtn" class="btn btn-tonal btn-sm" onclick="markAllRead()" style="display:none;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    Mark all read
                 </button>
-                <span id="recFrameCount" class="rec-info-label"></span>
             </div>
+        </div>
+        <div id="highAlertsBanner">
+            <div class="banner-head"><div class="banner-pulse"></div>Critical Alerts Escalating</div>
+            <div id="highAlertsContent" style="display:flex;flex-direction:column;gap:.5rem;"></div>
+        </div>
+        <div id="reportsContainer">
+            <div class="empty-state">
+                <svg width="56" height="56" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p>Enter your backend URL above and click <strong>Connect</strong> to start receiving alerts.</p>
+            </div>
+        </div>
+    </div>
 
-            <div id="playerArea" style="display:none;">
-                <div class="player-layout">
-                    <div class="player-video-container">
-                        <img id="playbackImg" class="playback-img hidden" alt="Playback frame">
-                        <div id="pbNoSignal" class="player-placeholder">
-                            <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                            <span>Select a session and click Load Frames</span>
-                        </div>
-                        <div class="player-overlay">
-                            <span id="pbStatus" class="pb-status-chip">—</span>
-                            <span id="pbCount" class="pb-count-chip">— people</span>
-                            <span id="pbTime" class="pb-time-label">—:—:—</span>
-                        </div>
-                        <div id="pbLoading" class="pb-loading hidden">
-                            <div class="spinner"></div>
-                        </div>
+    <!-- All Reports Panel -->
+    <div id="panelAll" style="display:none;">
+        <div class="toolbar">
+            <span class="section-label">Full Report History</span>
+            <button class="btn btn-outlined btn-sm" onclick="fetchAll()">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Refresh
+            </button>
+        </div>
+        <div id="allReportsContainer"><div class="empty-state"><p>No reports loaded yet.</p></div></div>
+    </div>
+
+    <!-- Recordings Panel -->
+    <div id="panelRecording" style="display:none;">
+        <div class="player-top-bar">
+            <select id="recordingSession" class="rec-select url-input" onchange="onSessionChange()"><option value="">— Select Session —</option></select>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+                <input type="datetime-local" id="recordingStart" class="date-input" title="Start time">
+                <span class="date-sep">→</span>
+                <input type="datetime-local" id="recordingEnd"   class="date-input" title="End time">
+            </div>
+            <button class="btn btn-filled btn-sm" onclick="loadRecording()">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Load Frames
+            </button>
+            <span id="recFrameCount" class="rec-info-label"></span>
+        </div>
+        <div id="playerArea" style="display:none;">
+            <div class="player-layout">
+                <div class="player-video-container">
+                    <img id="playbackImg" class="playback-img hidden" alt="Playback frame">
+                    <div id="pbNoSignal" class="player-placeholder">
+                        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <span>Select a session and click Load Frames</span>
                     </div>
-                    <div class="player-sidebar">
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label">Frame</span>
-                            <span id="pbFrameInfo" class="sidebar-stat-value">— / —</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label">Timestamp</span>
-                            <span id="pbFullTime" class="sidebar-stat-value" style="font-size:0.72rem;">—</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label">People Count</span>
-                            <span id="pbCountLarge" class="sidebar-stat-value" style="font-size:2rem; font-weight:900; background:linear-gradient(135deg,#a5b4fc,#e879f9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">—</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label">Total Frames</span>
-                            <span id="pbTotalFrames" class="sidebar-stat-value">—</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label">Playback Speed</span>
-                            <select id="pbSpeed" class="speed-select" onchange="changeSpeed(this.value)">
-                                <option value="0.5">0.5×</option>
-                                <option value="1" selected>1×</option>
-                                <option value="2">2×</option>
-                                <option value="4">4×</option>
-                                <option value="8">8×</option>
-                            </select>
-                        </div>
+                    <div class="player-overlay">
+                        <span id="pbStatus" class="pb-chip">—</span>
+                        <span id="pbCount"  class="pb-chip">— people</span>
+                        <span id="pbTime"   class="pb-time-label">—:—:—</span>
+                    </div>
+                    <div id="pbLoading" class="pb-loading hidden"><div class="spinner"></div></div>
+                </div>
+                <div class="player-sidebar">
+                    <div class="sidebar-stat"><span class="sidebar-stat-label">Frame</span><span id="pbFrameInfo" class="sidebar-stat-value">— / —</span></div>
+                    <div class="sidebar-stat"><span class="sidebar-stat-label">Timestamp</span><span id="pbFullTime" class="sidebar-stat-value" style="font-size:.72rem;">—</span></div>
+                    <div class="sidebar-stat"><span class="sidebar-stat-label">People Count</span><span id="pbCountLarge" class="sidebar-stat-value" style="font-size:2.2rem;font-weight:900;color:#1a73e8;letter-spacing:-.03em;">—</span></div>
+                    <div class="sidebar-stat"><span class="sidebar-stat-label">Total Frames</span><span id="pbTotalFrames" class="sidebar-stat-value">—</span></div>
+                    <div class="sidebar-stat">
+                        <span class="sidebar-stat-label">Playback Speed</span>
+                        <select id="pbSpeed" class="speed-select" onchange="changeSpeed(this.value)">
+                            <option value="0.5">0.5×</option><option value="1" selected>1×</option>
+                            <option value="2">2×</option><option value="4">4×</option><option value="8">8×</option>
+                        </select>
                     </div>
                 </div>
+            </div>
+            <div class="timeline-wrap">
+                <span class="timeline-label" id="tlStartLabel">—</span>
+                <div id="pbTimeline" class="timeline-bar" title="Click to seek"></div>
+                <span class="timeline-label" id="tlEndLabel">—</span>
+            </div>
+            <div class="player-controls">
+                <button class="btn btn-outlined btn-sm" onclick="stepFrame(-10)">«</button>
+                <button class="btn btn-outlined btn-sm" onclick="stepFrame(-1)">‹</button>
+                <button id="pbPlayBtn" class="btn btn-filled" style="min-width:110px;" onclick="togglePlay()">▶ Play</button>
+                <button class="btn btn-outlined btn-sm" onclick="stepFrame(1)">›</button>
+                <button class="btn btn-outlined btn-sm" onclick="stepFrame(10)">»</button>
+                <button class="btn btn-outlined btn-sm" onclick="restartPlayback()">↺ Restart</button>
+            </div>
+        </div>
+    </div>
 
-                <div class="timeline-wrap">
-                    <span class="timeline-label" id="tlStartLabel">—</span>
-                    <div id="pbTimeline" class="timeline-bar" title="Click to seek"></div>
-                    <span class="timeline-label" id="tlEndLabel">—</span>
-                </div>
-
-                <div class="player-controls">
-                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(-10)" title="Back 10">«</button>
-                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(-1)" title="Previous">‹</button>
-                    <button id="pbPlayBtn" class="btn btn-primary" style="min-width:110px;" onclick="togglePlay()">▶ Play</button>
-                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(1)" title="Next">›</button>
-                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(10)" title="Forward 10">»</button>
-                    <button class="btn btn-ghost btn-sm" onclick="restartPlayback()" title="Restart">↺</button>
-                </div>
+    <!-- Live Panel -->
+    <div id="panelLive" style="display:none;">
+        <div class="live-connect-bar">
+            <input id="liveSessionCode" type="text" class="live-code-input" placeholder="Session Code" maxlength="6" oninput="this.value=this.value.toUpperCase()"/>
+            <button class="btn btn-filled btn-sm" onclick="connectLive()">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                Connect Live
+            </button>
+            <button class="btn btn-outlined btn-sm" onclick="disconnectLive()">Disconnect</button>
+            <div class="status-badge-conn">
+                <div id="liveDot" class="status-dot"></div>
+                <span id="liveConnLabel">Not connected</span>
             </div>
         </div>
 
-        <!-- ── Live Panel ───────────────────────────────────────────────────── -->
-        <div id="panelLive" style="display:none;">
-            <div class="live-connect-bar">
-                <input
-                    id="liveSessionCode"
-                    type="text"
-                    class="live-session-input"
-                    placeholder="Session Code"
-                    maxlength="6"
-                    oninput="this.value=this.value.toUpperCase()"
-                />
-                <button class="btn btn-primary btn-sm" onclick="connectLive()">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-                    Connect Live
-                </button>
-                <button class="btn btn-ghost btn-sm" onclick="disconnectLive()">Disconnect</button>
-                <div class="status-badge-conn">
-                    <div id="liveDot" class="status-dot"></div>
-                    <span id="liveConnLabel">Not connected</span>
+        <div class="live-layout">
+            <div class="live-video-container">
+                <img id="liveImg" class="live-img hidden" alt="Live feed">
+                <div id="liveNoSignal" class="player-placeholder">
+                    <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                    <span>Enter a session code and connect</span>
+                </div>
+                <div class="live-badges">
+                    <div id="liveBadge" class="live-badge hidden">● LIVE</div>
+                    <div id="liveStatusChip" class="live-status-chip hidden">—</div>
+                </div>
+                <div id="liveReconnecting" class="live-reconnecting hidden">
+                    <div class="spinner"></div><p>Reconnecting...</p>
                 </div>
             </div>
-
-            <div class="live-layout">
-                <div class="live-video-container">
-                    <img id="liveImg" class="live-img hidden" alt="Live detection feed">
-                    <div id="liveNoSignal" class="player-placeholder">
-                        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-                        <span>Enter a session code and connect</span>
-                    </div>
-                    <div class="live-badges">
-                        <div id="liveBadge" class="live-badge hidden">● LIVE</div>
-                        <div id="liveStatusChip" class="live-status-chip hidden">—</div>
-                    </div>
-                    <div id="liveReconnecting" class="live-reconnecting hidden">
-                        <div class="spinner"></div>
-                        <p>Reconnecting...</p>
+            <div class="live-sidebar">
+                <div class="live-count-card">
+                    <div class="live-count-label">People Detected</div>
+                    <div id="liveCount" class="live-count-display">—</div>
+                    <div id="liveStatusLarge" class="live-status-large">IDLE</div>
+                    <div class="threshold-legend">
+                        <span class="th-pill green">🟢 &lt;5 Safe</span>
+                        <span class="th-pill yellow">🟡 5–10</span>
+                        <span class="th-pill red">🔴 &gt;10 Alert</span>
                     </div>
                 </div>
-
-                <div class="live-sidebar">
-                    <div class="live-count-card">
-                        <div class="live-count-label">People Detected</div>
-                        <div id="liveCount" class="live-count-display">—</div>
-                        <div id="liveStatusLarge" class="live-status-large">IDLE</div>
-                        <div class="threshold-legend">
-                            <span class="th-pill green">🟢 &lt;5 Safe</span>
-                            <span class="th-pill yellow">🟡 5–10</span>
-                            <span class="th-pill red">🔴 &gt;10 Alert</span>
+                <div class="sidebar-card">
+                    <span class="sidebar-stat-label">Last Frame</span>
+                    <span id="liveLastFrame" class="sidebar-stat-value">—</span>
+                </div>
+                <div id="liveLlmPanel" class="llm-card hidden">
+                    <div class="llm-header">
+                        <div class="llm-header-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                            AI Instruction
                         </div>
+                        <span id="liveSpeakBadge" class="speak-badge hidden">🔊 Speaking</span>
                     </div>
-
-                    <div class="sidebar-card">
-                        <span class="sidebar-stat-label">Last Frame</span>
-                        <span id="liveLastFrame" class="sidebar-stat-value">—</span>
-                    </div>
-
-                    <div id="liveLlmPanel" class="live-llm-panel hidden">
-                        <div class="live-llm-header">
-                            <div class="live-llm-header-left">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                                AI Instruction
-                            </div>
-                            <span id="liveSpeakBadge" class="speak-badge hidden">🔊 Speaking</span>
-                        </div>
-                        <p id="liveLlmText" class="live-llm-text">—</p>
-                    </div>
+                    <p id="liveLlmText" class="llm-text">—</p>
                 </div>
             </div>
         </div>
+    </div>
 
-    </div><!-- /.main-content -->
-</div><!-- /.app-shell -->
+</div><!-- /.page-body -->
 
 <div id="toast"></div>
 <script src="app.js"></script>
