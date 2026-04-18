@@ -3,491 +3,957 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrowdPulse — Organization Portal</title>
-    <meta name="description" content="CrowdPulse organization portal — real-time crowd alerts, AI reports, live monitoring and recording playback.">
-    <link rel="stylesheet" href="style.css">
+    <title>CrowdPulse — Organization Intelligence Portal</title>
+    <meta name="description" content="CrowdPulse enterprise organization portal — real-time AI crowd alerts, live monitoring and recording playback.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-/* ── CSS Variables ─────────────────────────────────────────────────────────── */
-:root {
-    --bg-base:        #f8f9fa;
-    --bg-surface:     #ffffff;
-    --bg-card:        #ffffff;
-    --bg-card-hover:  #f1f3f4;
-    --bg-input:       #ffffff;
-    --border-subtle:  #dadce0;
-    --border-mid:     #bdc1c6;
-    --text-primary:   #202124;
-    --text-secondary: #5f6368;
-    --text-muted:     #80868b;
-    --accent-violet:  #1a73e8;
-    --accent-glow:    rgba(26,115,232,0.3);
-    --green:          #1e8e3e;
-    --green-bg:       rgba(30,142,62,0.12);
-    --green-border:   rgba(30,142,62,0.35);
-    --yellow:         #f9ab00;
-    --yellow-bg:      rgba(249,171,0,0.12);
-    --yellow-border:  rgba(249,171,0,0.35);
-    --red:            #d93025;
-    --red-bg:         rgba(217,48,37,0.12);
-    --red-border:     rgba(217,48,37,0.35);
-    --radius-card:    0.75rem;
-    --radius-sm:      0.5rem;
-    --shadow-card:    0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-    --transition:     0.25s ease;
-}
+/* ── Reset & Base ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background: var(--bg-base); color: var(--text-primary); min-height: 100vh; line-height: 1.6; }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #bdc1c6; }
-.app-wrapper { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-.header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1.5rem 2rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); margin-bottom: 1.5rem; box-shadow: var(--shadow-card); }
-.header-brand h1 { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #4285f4, #1a73e8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.header-brand p { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.2rem; }
-.connection-bar { display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap; }
-.url-input { background: var(--bg-input); border: 1px solid var(--border-mid); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.82rem; padding: 0.5rem 0.875rem; width: 260px; outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
-.url-input:focus { border-color: var(--accent-violet); box-shadow: 0 0 0 3px var(--accent-glow); }
-.url-input::placeholder { color: var(--text-muted); }
-.btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.1rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition); white-space: nowrap; }
-.btn:hover { opacity: 0.88; transform: translateY(-1px); }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #060818;
+    color: #e2e8f0;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5568; }
+
+/* ── Animated Background ─────────────────────────────────────────────────────── */
+body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -1;
+    background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(99,102,241,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139,92,246,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(6,182,212,0.06) 0%, transparent 60%),
+        #060818;
+    animation: bgShift 15s ease-in-out infinite alternate;
+}
+@keyframes bgShift {
+    0%   { background-position: 20% 0%, 80% 100%, 50% 50%; }
+    100% { background-position: 25% 5%, 75% 95%, 55% 45%; }
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────────── */
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.main-content { max-width: 1480px; margin: 0 auto; padding: 0 1.5rem 4rem; width: 100%; }
+
+/* ── Glass Card ──────────────────────────────────────────────────────────────── */
+.glass {
+    background: rgba(15, 20, 40, 0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.glass-light {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── TOP NAV ─────────────────────────────────────────────────────────────────── */
+.topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(6, 8, 24, 0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 0 1.5rem;
+}
+.topnav-inner {
+    max-width: 1480px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; gap: 1.25rem;
+}
+.brand {
+    display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
+    text-decoration: none;
+}
+.brand-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px rgba(99,102,241,0.4);
+    flex-shrink: 0;
+}
+.brand-icon svg { width: 18px; height: 18px; color: #fff; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name {
+    font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #a5b4fc, #e879f9);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.brand-sub { font-size: 0.65rem; color: #64748b; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+
+.nav-connection {
+    display: flex; align-items: center; gap: 0.625rem; flex: 1; max-width: 520px;
+}
+.nav-url-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    padding: 0.525rem 0.875rem 0.525rem 2.5rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    min-width: 0;
+}
+.nav-url-input:focus {
+    border-color: rgba(99,102,241,0.6);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    background: rgba(255,255,255,0.07);
+}
+.nav-url-input::placeholder { color: #475569; }
+.url-input-wrap { position: relative; flex: 1; min-width: 0; }
+.url-input-icon {
+    position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+    color: #475569; pointer-events: none;
+}
+.url-input-icon svg { width: 14px; height: 14px; }
+
+.conn-status-pill {
+    display: flex; align-items: center; gap: 0.45rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.75rem; font-weight: 600; color: #64748b;
+    white-space: nowrap; flex-shrink: 0;
+    transition: all 0.3s;
+}
+.conn-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #374151; flex-shrink: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.conn-dot.connected  { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.conn-dot.connecting { background: #f59e0b; animation: dotPulse 1s infinite; }
+.conn-dot.error      { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+@keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+.btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.525rem 1.1rem;
+    border-radius: 10px; font-family: 'Inter', sans-serif;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none;
+    transition: all 0.2s ease; white-space: nowrap; text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
-.btn-primary { background: linear-gradient(135deg, #4285f4, #1a73e8); color: #fff; box-shadow: 0 1px 3px rgba(26,115,232,0.4); border: 1px solid transparent; }
-.btn-primary:hover { box-shadow: 0 2px 6px rgba(26,115,232,0.5); }
-.btn-outline { background: transparent; border: 1px solid var(--border-mid); color: var(--text-secondary); }
-.btn-outline:hover { background: rgba(0,0,0,0.03); border-color: var(--border-mid); color: var(--text-primary); }
-.btn-sm { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
-.btn-mark-read { background: rgba(26,115,232,0.1); border: 1px solid rgba(26,115,232,0.2); color: #1a73e8; }
-.btn-mark-read:hover { background: rgba(26,115,232,0.2); }
-.btn:disabled { opacity: 0.4; pointer-events: none; }
-.status-badge-conn { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.875rem; border-radius: 2rem; background: var(--bg-input); border: 1px solid var(--border-subtle); font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; flex-shrink: 0; }
-.status-dot.connected  { background: var(--green); box-shadow: 0 0 6px var(--green); }
-.status-dot.connecting { background: var(--yellow); animation: pulseDot 1s infinite; }
-.status-dot.error      { background: var(--red); }
-@keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.4} }
-.stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-card); transition: border-color var(--transition); }
-.stat-card:hover { border-color: var(--border-mid); }
-.stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 0.6rem; }
-.stat-value { font-size: 2rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
-.stat-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.4rem; }
-.tabs { display: flex; gap: 0.25rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 0.4rem; margin-bottom: 1.25rem; width: fit-content; }
-.tab-btn { padding: 0.5rem 1.25rem; border-radius: 0.625rem; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: transparent; transition: all var(--transition); }
-.tab-btn.active { background: var(--accent-violet); color: #fff; box-shadow: 0 2px 10px rgba(124,58,237,0.4); }
-.tab-count { display: inline-flex; align-items: center; justify-content: center; background: rgba(239,68,68,0.85); color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 9999px; padding: 0 0.4rem; min-width: 1.2rem; height: 1.2rem; margin-left: 0.4rem; }
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+}
+.btn-primary:hover { box-shadow: 0 4px 20px rgba(99,102,241,0.6); }
+.btn-ghost {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; }
+.btn-danger {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #f87171;
+}
+.btn-danger:hover { background: rgba(239,68,68,0.25); }
+.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.75rem; border-radius: 8px; }
+.btn:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
+
+/* ── Stats Strip ─────────────────────────────────────────────────────────────── */
+.stats-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin: 1.5rem 0;
+}
+.stat-card {
+    padding: 1.4rem 1.5rem;
+    border-radius: 16px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--card-glow, rgba(99,102,241,0.08));
+    opacity: 0; transition: opacity 0.3s;
+}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card:hover::before { opacity: 1; }
+.stat-card-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+    background: var(--icon-bg, rgba(99,102,241,0.15));
+    border: 1px solid var(--icon-border, rgba(99,102,241,0.25));
+}
+.stat-card-icon svg { width: 18px; height: 18px; color: var(--icon-color, #a5b4fc); }
+.stat-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #64748b; margin-bottom: 0.35rem; }
+.stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; color: #f1f5f9; transition: color 0.3s; }
+.stat-sub { font-size: 0.72rem; color: #475569; margin-top: 0.4rem; }
+
+/* ── Tab Bar ─────────────────────────────────────────────────────────────────── */
+.tab-bar {
+    display: flex; align-items: center; gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: 14px;
+    margin-bottom: 1.5rem;
+    width: fit-content;
+}
+.tab-btn {
+    padding: 0.55rem 1.3rem;
+    border-radius: 10px; font-size: 0.825rem; font-weight: 600;
+    color: #64748b; cursor: pointer; border: none;
+    background: transparent; font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;
+}
+.tab-btn:hover { color: #94a3b8; background: rgba(255,255,255,0.04); }
+.tab-btn.active {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+}
+.tab-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(239,68,68,0.85); color: #fff;
+    font-size: 0.62rem; font-weight: 700; border-radius: 999px;
+    padding: 0 0.35rem; min-width: 1.1rem; height: 1.1rem;
+}
 .tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
-.toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
-.toolbar-left { display: flex; align-items: center; gap: 0.5rem; }
-.section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-secondary); }
-.poll-label { font-size: 0.7rem; color: var(--text-muted); }
-#reportsContainer, #allReportsContainer { display: flex; flex-direction: column; gap: 0.875rem; }
-.report-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-card); position: relative; transition: border-color var(--transition), background var(--transition), transform var(--transition); animation: slideIn 0.3s ease; }
-@keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-.report-card:hover { background: var(--bg-card-hover); transform: translateY(-1px); }
-.report-card.unread { border-left: 3px solid var(--accent-violet); }
-.report-card.status-GREEN  { border-left-color: var(--green); }
-.report-card.status-YELLOW { border-left-color: var(--yellow); }
-.report-card.status-RED    { border-left-color: var(--red); }
-.report-card.status-GREEN.unread  { background: linear-gradient(90deg, var(--green-bg) 0%, var(--bg-card) 40%); }
-.report-card.status-YELLOW.unread { background: linear-gradient(90deg, var(--yellow-bg) 0%, var(--bg-card) 40%); }
-.report-card.status-RED.unread    { background: linear-gradient(90deg, var(--red-bg) 0%, var(--bg-card) 40%); }
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
+.toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.toolbar-left { display: flex; align-items: center; gap: 0.625rem; }
+.section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #475569; }
+.poll-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10b981; animation: pollBlink 2s infinite;
+}
+@keyframes pollBlink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.poll-label { font-size: 0.7rem; color: #475569; }
+
+/* ── Report Cards ────────────────────────────────────────────────────────────── */
+#reportsContainer, #allReportsContainer { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.report-card {
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: cardSlideIn 0.3s ease;
+    cursor: default;
+    background: rgba(15, 20, 40, 0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+@keyframes cardSlideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.report-card:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.1); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+.report-card .status-accent {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; border-radius: 14px 0 0 14px;
+}
+.report-card.status-GREEN  .status-accent { background: linear-gradient(180deg, #10b981, #059669); box-shadow: 2px 0 12px rgba(16,185,129,0.3); }
+.report-card.status-YELLOW .status-accent { background: linear-gradient(180deg, #f59e0b, #d97706); box-shadow: 2px 0 12px rgba(245,158,11,0.3); }
+.report-card.status-RED    .status-accent { background: linear-gradient(180deg, #ef4444, #dc2626); box-shadow: 2px 0 12px rgba(239,68,68,0.3); }
+.report-card.status-GREEN  { border-left: none; }
+.report-card.status-YELLOW { border-left: none; }
+.report-card.status-RED    { border-left: none; }
+
 .report-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
-.report-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-.status-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; }
-.status-chip.GREEN  { background: var(--green-bg);  border: 1px solid var(--green-border);  color: var(--green);  }
-.status-chip.YELLOW { background: var(--yellow-bg); border: 1px solid var(--yellow-border); color: var(--yellow); }
-.status-chip.RED    { background: var(--red-bg);    border: 1px solid var(--red-border);    color: var(--red);    }
-.session-chip { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); font-family: monospace; background: rgba(255,255,255,0.04); padding: 0.15rem 0.5rem; border-radius: 0.3rem; border: 1px solid var(--border-subtle); }
-.unread-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-violet); box-shadow: 0 0 6px var(--accent-violet); flex-shrink: 0; }
-.report-time { font-size: 0.72rem; color: var(--text-muted); font-family: monospace; }
-.report-body { font-size: 0.875rem; color: var(--text-primary); line-height: 1.65; margin-bottom: 0.875rem; }
-.report-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); }
-.avg-count-label { font-size: 0.72rem; color: var(--text-muted); }
-.avg-count-label span { font-weight: 700; color: var(--text-secondary); }
-.player-top-bar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.rec-select { width: 230px; }
+.report-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.status-chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.2rem 0.65rem; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+}
+.status-chip.GREEN  { background: rgba(16,185,129,0.15);  border: 1px solid rgba(16,185,129,0.35);  color: #34d399; }
+.status-chip.YELLOW { background: rgba(245,158,11,0.15);  border: 1px solid rgba(245,158,11,0.35);  color: #fbbf24; }
+.status-chip.RED    { background: rgba(239,68,68,0.15);   border: 1px solid rgba(239,68,68,0.35);   color: #f87171; }
+.session-chip {
+    font-size: 0.68rem; font-weight: 600; color: #64748b;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    background: rgba(255,255,255,0.04); padding: 0.15rem 0.5rem;
+    border-radius: 6px; border: 1px solid rgba(255,255,255,0.07);
+}
+.unread-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #818cf8; box-shadow: 0 0 6px rgba(129,140,248,0.8); flex-shrink: 0;
+}
+.report-time { font-size: 0.7rem; color: #475569; font-family: monospace; }
+.report-body { font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 0.875rem; }
+.report-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.5rem; padding-top: 0.75rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.avg-count-label { font-size: 0.7rem; color: #475569; }
+.avg-count-label span { font-weight: 700; color: #94a3b8; }
+
+/* ── High Alert Banner ───────────────────────────────────────────────────────── */
+#highAlertsBanner {
+    display: none;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.25rem;
+}
+.high-alert-header {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: #f87171; font-weight: 700; font-size: 0.8rem;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;
+}
+.high-alert-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
+    animation: pulseDanger 1.5s infinite;
+}
+@keyframes pulseDanger { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.7} }
+
+/* ── Recording Panel ─────────────────────────────────────────────────────────── */
+.player-top-bar {
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    padding: 1rem 1.25rem; border-radius: 14px; margin-bottom: 1.25rem;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.rec-select {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
+    font-size: 0.82rem; padding: 0.5rem 0.875rem; outline: none;
+    width: 230px; cursor: pointer; transition: border-color 0.2s;
+}
+.rec-select:focus { border-color: rgba(99,102,241,0.6); }
 .date-range-wrap { display: flex; align-items: center; gap: 0.5rem; }
-.date-input { width: 185px; }
-.date-sep { color: var(--text-muted); font-size: 0.9rem; }
-.rec-info-label { font-size: 0.78rem; color: var(--accent-violet); font-weight: 600; }
-.player-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; margin-bottom: 0.875rem; }
-.player-video-container { position: relative; background: #000; border-radius: 0.875rem; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border-mid); display: flex; align-items: center; justify-content: center; }
+.date-input {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
+    font-size: 0.78rem; padding: 0.5rem 0.75rem; outline: none; width: 185px;
+    transition: border-color 0.2s; color-scheme: dark;
+}
+.date-input:focus { border-color: rgba(99,102,241,0.6); }
+.date-sep { color: #475569; font-size: 0.9rem; }
+.rec-info-label { font-size: 0.78rem; color: #818cf8; font-weight: 600; }
+
+.player-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; margin-bottom: 0.875rem; }
+.player-video-container {
+    position: relative; background: #000;
+    border-radius: 14px; overflow: hidden;
+    aspect-ratio: 16/9;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
 .playback-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .playback-img.hidden { display: none; }
-.player-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; color: var(--text-muted); text-align: center; padding: 2rem; position: absolute; inset: 0; }
+.player-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.75rem; color: #374151; text-align: center; padding: 2rem; position: absolute; inset: 0;
+}
+.player-placeholder svg { opacity: 0.3; }
 .player-placeholder span { font-size: 0.85rem; }
-.player-overlay { position: absolute; bottom: 0.75rem; left: 0.75rem; display: flex; gap: 0.5rem; align-items: center; pointer-events: none; }
-.pb-status-chip { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); color: #fff; }
-.pb-count-chip { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); color: rgba(255,255,255,0.8); }
-.pb-time-label { font-size: 0.68rem; font-family: monospace; color: rgba(255,255,255,0.6); }
-.pb-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); }
+.player-overlay {
+    position: absolute; bottom: 0.875rem; left: 0.875rem;
+    display: flex; gap: 0.5rem; align-items: center; pointer-events: none;
+}
+.pb-status-chip {
+    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); color: #f1f5f9;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.pb-count-chip {
+    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.pb-time-label { font-size: 0.68rem; font-family: monospace; color: rgba(255,255,255,0.5); }
+.pb-loading {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+}
 .pb-loading.hidden { display: none; }
-.player-sidebar { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1rem; display: flex; flex-direction: column; gap: 0.875rem; }
-.sidebar-stat { display: flex; flex-direction: column; gap: 0.2rem; }
-.sidebar-stat-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
-.sidebar-stat-value { font-size: 1rem; font-weight: 700; color: var(--text-secondary); }
-.sidebar-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.speed-select { background: var(--bg-input); border: 1px solid var(--border-mid); color: var(--text-primary); border-radius: var(--radius-sm); padding: 0.3rem 0.5rem; font-size: 0.8rem; outline: none; cursor: pointer; }
+
+/* Sidebar */
+.player-sidebar {
+    border-radius: 14px; padding: 1.25rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    background: rgba(15,20,40,0.6); border: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+.sidebar-stat-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #475569; }
+.sidebar-stat-value { font-size: 1rem; font-weight: 700; color: #94a3b8; }
+.sidebar-card {
+    border-radius: 14px; padding: 1rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    background: rgba(15,20,40,0.6); border: 1px solid rgba(255,255,255,0.06);
+}
+.speed-select {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: #e2e8f0; border-radius: 8px; padding: 0.3rem 0.5rem;
+    font-size: 0.8rem; outline: none; cursor: pointer; font-family: 'Inter', sans-serif;
+}
+
+/* Timeline */
 .timeline-wrap { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.875rem; }
-.timeline-label { font-size: 0.65rem; color: var(--text-muted); font-family: monospace; white-space: nowrap; min-width: 55px; }
-.timeline-bar { flex: 1; height: 20px; background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 4px; overflow: hidden; display: flex; cursor: pointer; position: relative; }
-.timeline-bar:hover { border-color: var(--border-mid); }
+.timeline-label { font-size: 0.62rem; color: #475569; font-family: monospace; white-space: nowrap; min-width: 55px; }
+.timeline-bar {
+    flex: 1; height: 22px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px; overflow: hidden; display: flex; cursor: pointer; position: relative;
+}
+.timeline-bar:hover { border-color: rgba(255,255,255,0.12); }
 .timeline-seg { height: 100%; flex: 1; min-width: 1px; transition: opacity 0.1s; position: relative; }
 .timeline-seg:hover { opacity: 0.75; }
-.timeline-seg.current::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: #fff; opacity: 0.9; }
-.player-controls { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 0.875rem 1.25rem; }
-.live-connect-bar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.live-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; }
-.live-video-container { position: relative; background: #000; border-radius: 0.875rem; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border-mid); display: flex; align-items: center; justify-content: center; transition: box-shadow 0.4s ease; }
+.timeline-seg.current::after {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 100%; background: rgba(255,255,255,0.9); opacity: 0.9;
+}
+.player-controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem; flex-wrap: wrap;
+    padding: 0.875rem 1.25rem; border-radius: 14px;
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ── Live Panel ──────────────────────────────────────────────────────────────── */
+.live-connect-bar {
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    padding: 1rem 1.25rem; border-radius: 14px; margin-bottom: 1.25rem;
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+}
+.live-session-input {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px; color: #e2e8f0; font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.12em;
+    padding: 0.525rem 0.875rem; width: 180px; outline: none; text-transform: uppercase;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.live-session-input:focus {
+    border-color: rgba(99,102,241,0.6); box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.live-session-input::placeholder { color: #374151; font-weight: 400; letter-spacing: 0; }
+
+.live-layout { display: grid; grid-template-columns: 1fr 360px; gap: 1.25rem; }
+
+.live-video-container {
+    position: relative; background: #000;
+    border-radius: 16px; overflow: hidden;
+    aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    transition: box-shadow 0.4s ease;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
 .live-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .live-img.hidden { display: none; }
-.live-badges { position: absolute; top: 0.75rem; left: 0.75rem; display: flex; gap: 0.5rem; align-items: center; }
-.live-badge { padding: 0.2rem 0.6rem; border-radius: 9999px; background: rgba(239,68,68,0.85); backdrop-filter: blur(4px); color: #fff; font-size: 0.72rem; font-weight: 700; animation: pulseLive 1.5s ease-in-out infinite; }
+.live-badges { position: absolute; top: 0.875rem; left: 0.875rem; display: flex; gap: 0.5rem; align-items: center; }
+.live-badge {
+    padding: 0.25rem 0.7rem; border-radius: 999px;
+    background: rgba(239,68,68,0.85); backdrop-filter: blur(6px);
+    color: #fff; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
+    border: 1px solid rgba(255,255,255,0.15);
+    animation: pulseLive 1.5s ease-in-out infinite;
+}
 .live-badge.hidden { display: none; }
-@keyframes pulseLive { 0%,100%{opacity:1} 50%{opacity:0.65} }
-.live-status-chip { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: var(--text-primary); }
+@keyframes pulseLive { 0%,100%{opacity:1} 50%{opacity:0.7} }
+.live-status-chip {
+    padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9;
+}
 .live-status-chip.hidden { display: none; }
-.live-reconnecting { position: absolute; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; color: var(--text-secondary); font-size: 0.875rem; }
+.live-reconnecting {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.75rem; color: #94a3b8; font-size: 0.875rem;
+}
 .live-reconnecting.hidden { display: none; }
-.live-sidebar { display: flex; flex-direction: column; gap: 0.875rem; }
-.live-count-display { font-size: 3rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin: 0.4rem 0; }
-.live-status-large { font-size: 1.4rem; font-weight: 800; color: var(--text-secondary); letter-spacing: 0.05em; }
-.threshold-legend { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
-.th-pill { font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 9999px; }
-.th-pill.green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-border);  }
-.th-pill.yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
-.th-pill.red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-border);    }
-.live-llm-panel { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); border-radius: var(--radius-card); padding: 1rem; }
+
+.live-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+.live-count-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: rgba(15,20,40,0.7);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative; overflow: hidden;
+}
+.live-count-card::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
+    pointer-events: none;
+}
+.live-count-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #475569; margin-bottom: 0.5rem; }
+.live-count-display {
+    font-size: 4rem; font-weight: 900; color: #f1f5f9; line-height: 1;
+    letter-spacing: -0.04em; margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    transition: all 0.3s;
+}
+.live-status-large {
+    font-size: 0.88rem; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #64748b;
+    transition: color 0.3s;
+}
+.threshold-legend { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.th-pill {
+    font-size: 0.65rem; font-weight: 700; padding: 0.25rem 0.6rem;
+    border-radius: 999px; letter-spacing: 0.03em;
+}
+.th-pill.green  { background: rgba(16,185,129,0.12);  color: #34d399;  border: 1px solid rgba(16,185,129,0.25);  }
+.th-pill.yellow { background: rgba(245,158,11,0.12);  color: #fbbf24;  border: 1px solid rgba(245,158,11,0.25);  }
+.th-pill.red    { background: rgba(239,68,68,0.12);   color: #f87171;  border: 1px solid rgba(239,68,68,0.25);   }
+
+/* Status glow on live video */
+.live-video-container.status-GREEN  { box-shadow: 0 0 0 2px rgba(16,185,129,0.6), 0 0 40px rgba(16,185,129,0.2); }
+.live-video-container.status-YELLOW { box-shadow: 0 0 0 2px rgba(245,158,11,0.6), 0 0 40px rgba(245,158,11,0.2); }
+.live-video-container.status-RED    { box-shadow: 0 0 0 2px rgba(239,68,68,0.7), 0 0 50px rgba(239,68,68,0.3); animation: redGlow 1.8s ease-in-out infinite; }
+@keyframes redGlow {
+    0%,100% { box-shadow: 0 0 0 2px rgba(239,68,68,0.7), 0 0 40px rgba(239,68,68,0.25); }
+    50%      { box-shadow: 0 0 0 3px rgba(239,68,68,0.9), 0 0 70px rgba(239,68,68,0.45); }
+}
+
+/* AI Panel */
+.live-llm-panel {
+    padding: 1.25rem; border-radius: 16px;
+    background: rgba(99,102,241,0.06);
+    border: 1px solid rgba(99,102,241,0.2);
+    position: relative; overflow: hidden;
+}
+.live-llm-panel::before {
+    content: ''; position: absolute;
+    bottom: -30px; left: -30px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%);
+    pointer-events: none;
+}
 .live-llm-panel.hidden { display: none; }
-.live-llm-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #a78bfa; margin-bottom: 0.6rem; }
-.live-llm-text { font-size: 0.82rem; color: var(--text-secondary); font-style: italic; line-height: 1.6; }
-.speak-badge { font-size: 0.68rem; font-weight: 700; color: #a78bfa; background: rgba(124,58,237,0.2); padding: 0.2rem 0.5rem; border-radius: 9999px; animation: speakPulse 0.8s ease-in-out infinite; }
+.live-llm-header {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.7rem; font-weight: 700; color: #818cf8;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;
+}
+.live-llm-header-left { display: flex; align-items: center; gap: 0.4rem; }
+.live-llm-text { font-size: 0.84rem; color: #94a3b8; line-height: 1.7; }
+.speak-badge {
+    font-size: 0.65rem; font-weight: 800; color: #a5b4fc;
+    background: rgba(99,102,241,0.2); padding: 0.2rem 0.55rem;
+    border-radius: 999px; border: 1px solid rgba(99,102,241,0.3);
+    animation: speakPulse 0.8s ease-in-out infinite;
+}
 .speak-badge.hidden { display: none; }
-@keyframes speakPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.95)} }
-.live-video-container.status-GREEN  { box-shadow: 0 0 0 3px #10b981, 0 0 20px rgba(16,185,129,0.4); }
-.live-video-container.status-YELLOW { box-shadow: 0 0 0 3px #f59e0b, 0 0 24px rgba(245,158,11,0.4); }
-.live-video-container.status-RED    { box-shadow: 0 0 0 3px #ef4444, 0 0 30px rgba(239,68,68,0.55); animation: pulseRedBorder 1.6s ease-in-out infinite; }
-@keyframes pulseRedBorder { 0%,100% { box-shadow: 0 0 0 3px #ef4444, 0 0 30px rgba(239,68,68,0.55); } 50% { box-shadow: 0 0 0 5px #ef4444, 0 0 45px rgba(239,68,68,0.8); } }
-.hidden { display: none !important; }
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; color: var(--text-muted); text-align: center; gap: 1rem; }
-.empty-state svg { opacity: 0.35; }
-.empty-state p { font-size: 0.9rem; }
+@keyframes speakPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.96)} }
+
+/* ── Empty State ─────────────────────────────────────────────────────────────── */
+.empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 5rem 2rem; color: #374151; text-align: center; gap: 1rem;
+    border-radius: 16px; border: 1px dashed rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.01);
+}
+.empty-state svg { opacity: 0.2; }
+.empty-state p { font-size: 0.9rem; color: #475569; }
+.empty-state strong { color: #818cf8; }
+
+/* ── Spinner ─────────────────────────────────────────────────────────────────── */
 .spinner-wrap { display: flex; justify-content: center; padding: 3rem; }
-.spinner { width: 36px; height: 36px; border: 3px solid var(--border-mid); border-top-color: var(--accent-violet); border-radius: 50%; animation: spin 0.7s linear infinite; }
+.spinner {
+    width: 32px; height: 32px;
+    border: 2.5px solid rgba(255,255,255,0.07);
+    border-top-color: #6366f1;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
-#toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; font-size: 0.82rem; color: var(--text-primary); box-shadow: 0 8px 30px rgba(0,0,0,0.5); z-index: 9999; opacity: 0; transform: translateY(1rem); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+
+/* ── Toast ───────────────────────────────────────────────────────────────────── */
+#toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+    padding: 0.875rem 1.25rem; border-radius: 12px;
+    background: rgba(15,20,40,0.95); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.82rem; color: #e2e8f0; font-family: 'Inter', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    opacity: 0; transform: translateY(1rem);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
 #toast.show { opacity: 1; transform: translateY(0); }
-@media (max-width: 768px) { .player-layout { grid-template-columns: 1fr; } .live-layout { grid-template-columns: 1fr; } .header { flex-direction: column; align-items: flex-start; } .connection-bar { width: 100%; } .url-input { width: 100%; } }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ── Utilities ───────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+.url-input { /* alias for compatibility */
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 9px; color: #e2e8f0; font-family: 'Inter', sans-serif;
+    font-size: 0.82rem; padding: 0.5rem 0.875rem; width: 260px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.url-input:focus { border-color: rgba(99,102,241,0.6); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+.url-input::placeholder { color: #374151; }
+
+/* stat-badge-conn alias */
+.status-badge-conn {
+    display: flex; align-items: center; gap: 0.45rem;
+    padding: 0.4rem 0.9rem; border-radius: 999px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.75rem; font-weight: 600; color: #64748b; white-space: nowrap;
+}
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #374151; flex-shrink: 0; transition: all 0.3s; }
+.status-dot.connected  { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.status-dot.connecting { background: #f59e0b; animation: dotPulse 1s infinite; }
+.status-dot.error      { background: #ef4444; }
+
+@media (max-width: 900px) {
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .player-layout { grid-template-columns: 1fr; }
+    .live-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .stats-strip { grid-template-columns: 1fr 1fr; }
+    .topnav-inner { height: auto; padding: 0.75rem 0; flex-wrap: wrap; }
+    .nav-connection { width: 100%; }
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.2)} }
     </style>
 </head>
 <body>
-<div class="app-wrapper">
+<div class="app-shell">
 
-    <!-- ── Header ─────────────────────────────────────────────────────────── -->
-    <header class="header">
-        <div class="header-brand">
-            <h1>CrowdPulse <span style="font-weight:300; color:#7c3aed;">Org</span></h1>
-            <p>Organization Intelligence Portal &nbsp;•&nbsp; AI Reports &nbsp;•&nbsp; Live &amp; Recorded Monitoring</p>
+    <!-- ── Top Navigation ───────────────────────────────────────────────────── -->
+    <nav class="topnav">
+        <div class="topnav-inner">
+            <!-- Brand -->
+            <a class="brand" href="#">
+                <div class="brand-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7
+                            -1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">CrowdPulse Org</span>
+                    <span class="brand-sub">Intelligence Portal</span>
+                </div>
+            </a>
+
+            <!-- Connection Bar -->
+            <div class="nav-connection">
+                <div class="url-input-wrap">
+                    <span class="url-input-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                    <input
+                        id="backendUrlInput"
+                        class="nav-url-input"
+                        type="text"
+                        placeholder="Backend URL (e.g. one00000.onrender.com)"
+                        autocomplete="off" spellcheck="false"
+                    />
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveAndConnect()">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Connect
+                </button>
+                <div class="conn-status-pill">
+                    <div id="connDot" class="conn-dot"></div>
+                    <span id="connLabel">Not connected</span>
+                </div>
+            </div>
         </div>
-        <div class="connection-bar">
-            <input
-                id="backendUrlInput"
-                class="url-input"
-                type="text"
-                placeholder="Backend URL (e.g. localhost:8000)"
-                autocomplete="off"
-                spellcheck="false"
-            />
-            <button class="btn btn-primary" onclick="saveAndConnect()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                Connect
+    </nav>
+
+    <!-- ── Main Content ─────────────────────────────────────────────────────── -->
+    <div class="main-content">
+
+        <!-- Stats Strip -->
+        <div class="stats-strip">
+            <div class="stat-card glass" style="--card-glow:rgba(129,140,248,0.08); --icon-bg:rgba(129,140,248,0.12); --icon-border:rgba(129,140,248,0.25); --icon-color:#a5b4fc;">
+                <div class="stat-card-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                </div>
+                <div class="stat-label">Unread Alerts</div>
+                <div id="statUnread" class="stat-value">—</div>
+                <div class="stat-sub">Pending review</div>
+            </div>
+            <div class="stat-card glass" style="--card-glow:rgba(16,185,129,0.08); --icon-bg:rgba(16,185,129,0.12); --icon-border:rgba(16,185,129,0.25); --icon-color:#34d399;">
+                <div class="stat-card-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div class="stat-label">Reports Today</div>
+                <div id="statToday" class="stat-value">—</div>
+                <div class="stat-sub">Last 24 hours</div>
+            </div>
+            <div class="stat-card glass" style="--card-glow:rgba(239,68,68,0.08); --icon-bg:rgba(239,68,68,0.12); --icon-border:rgba(239,68,68,0.25); --icon-color:#f87171;">
+                <div class="stat-card-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <div class="stat-label">Highest Status</div>
+                <div id="statHighest" class="stat-value">—</div>
+                <div class="stat-sub">Since last refresh</div>
+            </div>
+            <div class="stat-card glass" style="--card-glow:rgba(245,158,11,0.08); --icon-bg:rgba(245,158,11,0.12); --icon-border:rgba(245,158,11,0.25); --icon-color:#fbbf24;">
+                <div class="stat-card-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div class="stat-label">Avg Crowd Count</div>
+                <div id="statAvg" class="stat-value">—</div>
+                <div class="stat-sub">Across all reports</div>
+            </div>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar glass">
+            <button id="tabUnread" class="tab-btn active" role="tab" onclick="showTab('unread')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                Unread
+                <span id="unreadCount" class="tab-count" style="display:none;"></span>
             </button>
-            <div class="status-badge-conn">
-                <div id="connDot" class="status-dot"></div>
-                <span id="connLabel">Not connected</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- ── Stats Bar ──────────────────────────────────────────────────────── -->
-    <div class="stats-bar">
-        <div class="stat-card">
-            <div class="stat-label">Unread Alerts</div>
-            <div id="statUnread" class="stat-value" style="color:#a78bfa;">—</div>
-            <div class="stat-sub">Pending review</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Reports Today</div>
-            <div id="statToday" class="stat-value">—</div>
-            <div class="stat-sub">Last 24 hours</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Highest Status</div>
-            <div id="statHighest" class="stat-value" style="color:#ef4444;">—</div>
-            <div class="stat-sub">Since last refresh</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Avg Crowd Count</div>
-            <div id="statAvg" class="stat-value">—</div>
-            <div class="stat-sub">Across all reports</div>
-        </div>
-    </div>
-
-    <!-- ── Tabs ───────────────────────────────────────────────────────────── -->
-    <div class="tabs" role="tablist">
-        <button id="tabUnread" class="tab-btn active" role="tab" onclick="showTab('unread')">
-            🔔 Unread
-            <span id="unreadCount" class="tab-count" style="display:none;"></span>
-        </button>
-        <button id="tabAll" class="tab-btn" role="tab" onclick="showTab('all')">
-            📋 All Reports
-        </button>
-        <button id="tabRecording" class="tab-btn" role="tab" onclick="showTab('recording')">
-            📹 Recordings
-        </button>
-        <button id="tabLive" class="tab-btn" role="tab" onclick="showTab('live')">
-            📡 Live
-        </button>
-    </div>
-
-    <!-- ── Unread Panel ────────────────────────────────────────────────────── -->
-    <div id="panelUnread">
-        <div class="toolbar">
-            <div class="toolbar-left">
-                <span class="section-label">Live Alerts</span>
-                <span id="pollIndicator" class="poll-label">polling every 10s</span>
-            </div>
-            <div style="display:flex; gap:0.5rem;">
-                <button class="btn btn-outline btn-sm" onclick="fetchUnread()">↻ Refresh</button>
-                <button id="markAllBtn" class="btn btn-outline btn-sm" onclick="markAllRead()" style="display:none;">✓ Mark All Read</button>
-            </div>
-        </div>
-
-        <!-- High Alerts Banner -->
-        <div id="highAlertsBanner" style="display: none; background: #fee2e2; border-left: 4px solid #ef4444; border-radius: 8px; margin: 1rem 1.5rem; padding: 1rem; box-shadow: 0 4px 6px -1px rgba(239,68,68,0.2);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
-                <div style="flex: 1;">
-                    <div style="display: flex; align-items: center; gap: 8px; color: #b91c1c; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">
-                        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; animation: pulse 2s infinite;"></span>
-                        Critical Alerts Escalating
-                    </div>
-                    <div id="highAlertsContent" style="display: flex; flex-direction: column; gap: 10px;">
-                        <!-- Red alerts inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="reportsContainer">
-            <div class="empty-state">
-                <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <p>Enter your backend URL above and click <strong>Connect</strong> to start receiving alerts.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── All Reports Panel ───────────────────────────────────────────────── -->
-    <div id="panelAll" style="display:none;">
-        <div class="toolbar">
-            <span class="section-label">Full Report History</span>
-            <button class="btn btn-outline btn-sm" onclick="fetchAll()">↻ Refresh</button>
-        </div>
-        <div id="allReportsContainer">
-            <div class="empty-state"><p>No reports loaded yet.</p></div>
-        </div>
-    </div>
-
-    <!-- ── Recordings Panel ───────────────────────────────────────────────── -->
-    <div id="panelRecording" style="display:none;">
-
-        <!-- Session + date range selector -->
-        <div class="player-top-bar">
-            <select id="recordingSession" class="url-input rec-select" onchange="onSessionChange()">
-                <option value="">— Select Session —</option>
-            </select>
-            <div class="date-range-wrap">
-                <input type="datetime-local" id="recordingStart" class="url-input date-input" title="Start time (optional)">
-                <span class="date-sep">→</span>
-                <input type="datetime-local" id="recordingEnd" class="url-input date-input" title="End time (optional)">
-            </div>
-            <button class="btn btn-primary" onclick="loadRecording()">
-                ⏳ Load Frames
+            <button id="tabAll" class="tab-btn" role="tab" onclick="showTab('all')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                All Reports
             </button>
-            <span id="recFrameCount" class="rec-info-label"></span>
-        </div>
-
-        <!-- Player area (hidden until frames are loaded) -->
-        <div id="playerArea" style="display:none;">
-
-            <div class="player-layout">
-                <!-- Main video area -->
-                <div class="player-video-container">
-                    <img id="playbackImg" class="playback-img hidden" alt="Playback frame">
-                    <div id="pbNoSignal" class="player-placeholder">
-                        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                        <span>Select a session and click Load Frames</span>
-                    </div>
-                    <!-- Frame overlay -->
-                    <div class="player-overlay">
-                        <span id="pbStatus" class="pb-status-chip">—</span>
-                        <span id="pbCount" class="pb-count-chip">— people</span>
-                        <span id="pbTime" class="pb-time-label">—:—:—</span>
-                    </div>
-                    <!-- Loading indicator -->
-                    <div id="pbLoading" class="pb-loading hidden">
-                        <div class="spinner"></div>
-                    </div>
-                </div>
-
-                <!-- Sidebar stats for playback -->
-                <div class="player-sidebar">
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label">Frame</span>
-                        <span id="pbFrameInfo" class="sidebar-stat-value">— / —</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label">Timestamp</span>
-                        <span id="pbFullTime" class="sidebar-stat-value" style="font-size:0.72rem;">—</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label">People Count</span>
-                        <span id="pbCountLarge" class="sidebar-stat-value" style="font-size:1.8rem; font-weight:800; color:var(--text-primary);">—</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label">Total Frames</span>
-                        <span id="pbTotalFrames" class="sidebar-stat-value">—</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label">Playback Speed</span>
-                        <select id="pbSpeed" class="speed-select" onchange="changeSpeed(this.value)">
-                            <option value="0.5">0.5×</option>
-                            <option value="1" selected>1×</option>
-                            <option value="2">2×</option>
-                            <option value="4">4×</option>
-                            <option value="8">8×</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Timeline bar -->
-            <div class="timeline-wrap">
-                <span class="timeline-label" id="tlStartLabel">—</span>
-                <div id="pbTimeline" class="timeline-bar" title="Click to seek to any frame"></div>
-                <span class="timeline-label" id="tlEndLabel">—</span>
-            </div>
-
-            <!-- Playback controls -->
-            <div class="player-controls">
-                <button class="btn btn-outline btn-sm" onclick="stepFrame(-10)" title="Back 10 frames">«</button>
-                <button class="btn btn-outline btn-sm" onclick="stepFrame(-1)" title="Previous frame">‹</button>
-                <button id="pbPlayBtn" class="btn btn-primary" style="min-width:110px;" onclick="togglePlay()">▶ Play</button>
-                <button class="btn btn-outline btn-sm" onclick="stepFrame(1)" title="Next frame">›</button>
-                <button class="btn btn-outline btn-sm" onclick="stepFrame(10)" title="Forward 10 frames">»</button>
-                <button class="btn btn-outline btn-sm" onclick="restartPlayback()" title="Restart">↺</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Live Panel ─────────────────────────────────────────────────────── -->
-    <div id="panelLive" style="display:none;">
-
-        <!-- Connect bar -->
-        <div class="live-connect-bar">
-            <input
-                id="liveSessionCode"
-                type="text"
-                class="url-input"
-                placeholder="Session Code (e.g. ABC123)"
-                maxlength="6"
-                style="width:180px; text-transform:uppercase; letter-spacing:0.1em;"
-                oninput="this.value=this.value.toUpperCase()"
-            />
-            <button class="btn btn-primary" onclick="connectLive()">
-                📡 Connect Live
+            <button id="tabRecording" class="tab-btn" role="tab" onclick="showTab('recording')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Recordings
             </button>
-            <button class="btn btn-outline" onclick="disconnectLive()">Disconnect</button>
-            <div class="status-badge-conn">
-                <div id="liveDot" class="status-dot"></div>
-                <span id="liveConnLabel">Not connected</span>
+            <button id="tabLive" class="tab-btn" role="tab" onclick="showTab('live')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                Live
+            </button>
+        </div>
+
+        <!-- ── Unread Panel ─────────────────────────────────────────────────── -->
+        <div id="panelUnread">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <span class="section-label">Live Alerts</span>
+                    <div class="poll-dot"></div>
+                    <span id="pollIndicator" class="poll-label">polling every 10s</span>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn btn-ghost btn-sm" onclick="fetchUnread()">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Refresh
+                    </button>
+                    <button id="markAllBtn" class="btn btn-ghost btn-sm" onclick="markAllRead()" style="display:none;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        Mark All Read
+                    </button>
+                </div>
+            </div>
+
+            <!-- High Alerts Banner -->
+            <div id="highAlertsBanner">
+                <div class="high-alert-header">
+                    <div class="high-alert-dot"></div>
+                    Critical Alerts Escalating
+                </div>
+                <div id="highAlertsContent" style="display:flex; flex-direction:column; gap:0.625rem;"></div>
+            </div>
+
+            <div id="reportsContainer">
+                <div class="empty-state">
+                    <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p>Enter your backend URL above and click <strong>Connect</strong> to start receiving alerts.</p>
+                </div>
             </div>
         </div>
 
-        <!-- Live viewer layout -->
-        <div class="live-layout">
+        <!-- ── All Reports Panel ────────────────────────────────────────────── -->
+        <div id="panelAll" style="display:none;">
+            <div class="toolbar">
+                <span class="section-label">Full Report History</span>
+                <button class="btn btn-ghost btn-sm" onclick="fetchAll()">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Refresh
+                </button>
+            </div>
+            <div id="allReportsContainer">
+                <div class="empty-state"><p>No reports loaded yet.</p></div>
+            </div>
+        </div>
 
-            <!-- Video area -->
-            <div class="live-video-container">
-                <img id="liveImg" class="live-img hidden" alt="Live detection feed">
-                <div id="liveNoSignal" class="player-placeholder">
-                    <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-                    <span>Enter a session code above and connect</span>
+        <!-- ── Recordings Panel ─────────────────────────────────────────────── -->
+        <div id="panelRecording" style="display:none;">
+            <div class="player-top-bar">
+                <select id="recordingSession" class="rec-select url-input" onchange="onSessionChange()">
+                    <option value="">— Select Session —</option>
+                </select>
+                <div class="date-range-wrap">
+                    <input type="datetime-local" id="recordingStart" class="date-input" title="Start time (optional)">
+                    <span class="date-sep">→</span>
+                    <input type="datetime-local" id="recordingEnd" class="date-input" title="End time (optional)">
                 </div>
-                <!-- Live overlay badges -->
-                <div class="live-badges">
-                    <div id="liveBadge" class="live-badge hidden">🔴 LIVE</div>
-                    <div id="liveStatusChip" class="live-status-chip hidden">—</div>
-                </div>
-                <!-- Reconnecting overlay -->
-                <div id="liveReconnecting" class="live-reconnecting hidden">
-                    <div class="spinner"></div>
-                    <p>Reconnecting...</p>
-                </div>
+                <button class="btn btn-primary btn-sm" onclick="loadRecording()">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Load Frames
+                </button>
+                <span id="recFrameCount" class="rec-info-label"></span>
             </div>
 
-            <!-- Live sidebar -->
-            <div class="live-sidebar">
-                <!-- Count card -->
-                <div class="sidebar-card">
-                    <span class="sidebar-stat-label">People Detected</span>
-                    <span id="liveCount" class="live-count-display">—</span>
-                    <div class="threshold-legend">
-                        <span class="th-pill green">🟢 &lt;5</span>
-                        <span class="th-pill yellow">🟡 5-10</span>
-                        <span class="th-pill red">🔴 &gt;10</span>
-                    </div>
-                </div>
-
-                <!-- Status card -->
-                <div class="sidebar-card">
-                    <span class="sidebar-stat-label">Alert Status</span>
-                    <span id="liveStatusLarge" class="live-status-large">IDLE</span>
-                </div>
-
-                <!-- Last frame time -->
-                <div class="sidebar-card">
-                    <span class="sidebar-stat-label">Last Frame</span>
-                    <span id="liveLastFrame" class="sidebar-stat-value">—</span>
-                </div>
-
-                <!-- AI Instruction panel -->
-                <div id="liveLlmPanel" class="live-llm-panel hidden">
-                    <div class="live-llm-header">
-                        <div style="display:flex; align-items:center; gap:0.4rem;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                            <span>AI Instruction</span>
+            <div id="playerArea" style="display:none;">
+                <div class="player-layout">
+                    <div class="player-video-container">
+                        <img id="playbackImg" class="playback-img hidden" alt="Playback frame">
+                        <div id="pbNoSignal" class="player-placeholder">
+                            <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            <span>Select a session and click Load Frames</span>
                         </div>
-                        <span id="liveSpeakBadge" class="speak-badge hidden">🔊 Speaking</span>
+                        <div class="player-overlay">
+                            <span id="pbStatus" class="pb-status-chip">—</span>
+                            <span id="pbCount" class="pb-count-chip">— people</span>
+                            <span id="pbTime" class="pb-time-label">—:—:—</span>
+                        </div>
+                        <div id="pbLoading" class="pb-loading hidden">
+                            <div class="spinner"></div>
+                        </div>
                     </div>
-                    <p id="liveLlmText" class="live-llm-text">—</p>
+                    <div class="player-sidebar">
+                        <div class="sidebar-stat">
+                            <span class="sidebar-stat-label">Frame</span>
+                            <span id="pbFrameInfo" class="sidebar-stat-value">— / —</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="sidebar-stat-label">Timestamp</span>
+                            <span id="pbFullTime" class="sidebar-stat-value" style="font-size:0.72rem;">—</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="sidebar-stat-label">People Count</span>
+                            <span id="pbCountLarge" class="sidebar-stat-value" style="font-size:2rem; font-weight:900; background:linear-gradient(135deg,#a5b4fc,#e879f9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">—</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="sidebar-stat-label">Total Frames</span>
+                            <span id="pbTotalFrames" class="sidebar-stat-value">—</span>
+                        </div>
+                        <div class="sidebar-stat">
+                            <span class="sidebar-stat-label">Playback Speed</span>
+                            <select id="pbSpeed" class="speed-select" onchange="changeSpeed(this.value)">
+                                <option value="0.5">0.5×</option>
+                                <option value="1" selected>1×</option>
+                                <option value="2">2×</option>
+                                <option value="4">4×</option>
+                                <option value="8">8×</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-wrap">
+                    <span class="timeline-label" id="tlStartLabel">—</span>
+                    <div id="pbTimeline" class="timeline-bar" title="Click to seek"></div>
+                    <span class="timeline-label" id="tlEndLabel">—</span>
+                </div>
+
+                <div class="player-controls">
+                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(-10)" title="Back 10">«</button>
+                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(-1)" title="Previous">‹</button>
+                    <button id="pbPlayBtn" class="btn btn-primary" style="min-width:110px;" onclick="togglePlay()">▶ Play</button>
+                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(1)" title="Next">›</button>
+                    <button class="btn btn-ghost btn-sm" onclick="stepFrame(10)" title="Forward 10">»</button>
+                    <button class="btn btn-ghost btn-sm" onclick="restartPlayback()" title="Restart">↺</button>
                 </div>
             </div>
         </div>
-    </div>
 
-</div><!-- /.app-wrapper -->
+        <!-- ── Live Panel ───────────────────────────────────────────────────── -->
+        <div id="panelLive" style="display:none;">
+            <div class="live-connect-bar">
+                <input
+                    id="liveSessionCode"
+                    type="text"
+                    class="live-session-input"
+                    placeholder="Session Code"
+                    maxlength="6"
+                    oninput="this.value=this.value.toUpperCase()"
+                />
+                <button class="btn btn-primary btn-sm" onclick="connectLive()">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                    Connect Live
+                </button>
+                <button class="btn btn-ghost btn-sm" onclick="disconnectLive()">Disconnect</button>
+                <div class="status-badge-conn">
+                    <div id="liveDot" class="status-dot"></div>
+                    <span id="liveConnLabel">Not connected</span>
+                </div>
+            </div>
 
-<!-- Toast -->
+            <div class="live-layout">
+                <div class="live-video-container">
+                    <img id="liveImg" class="live-img hidden" alt="Live detection feed">
+                    <div id="liveNoSignal" class="player-placeholder">
+                        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                        <span>Enter a session code and connect</span>
+                    </div>
+                    <div class="live-badges">
+                        <div id="liveBadge" class="live-badge hidden">● LIVE</div>
+                        <div id="liveStatusChip" class="live-status-chip hidden">—</div>
+                    </div>
+                    <div id="liveReconnecting" class="live-reconnecting hidden">
+                        <div class="spinner"></div>
+                        <p>Reconnecting...</p>
+                    </div>
+                </div>
+
+                <div class="live-sidebar">
+                    <div class="live-count-card">
+                        <div class="live-count-label">People Detected</div>
+                        <div id="liveCount" class="live-count-display">—</div>
+                        <div id="liveStatusLarge" class="live-status-large">IDLE</div>
+                        <div class="threshold-legend">
+                            <span class="th-pill green">🟢 &lt;5 Safe</span>
+                            <span class="th-pill yellow">🟡 5–10</span>
+                            <span class="th-pill red">🔴 &gt;10 Alert</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <span class="sidebar-stat-label">Last Frame</span>
+                        <span id="liveLastFrame" class="sidebar-stat-value">—</span>
+                    </div>
+
+                    <div id="liveLlmPanel" class="live-llm-panel hidden">
+                        <div class="live-llm-header">
+                            <div class="live-llm-header-left">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                                AI Instruction
+                            </div>
+                            <span id="liveSpeakBadge" class="speak-badge hidden">🔊 Speaking</span>
+                        </div>
+                        <p id="liveLlmText" class="live-llm-text">—</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.main-content -->
+</div><!-- /.app-shell -->
+
 <div id="toast"></div>
-
 <script src="app.js"></script>
 </body>
 </html>
