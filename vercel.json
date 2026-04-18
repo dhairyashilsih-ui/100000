@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "rewrites": [
-    { "source": "/", "destination": "/web/index.html" },
-    { "source": "/org", "destination": "/org-portal/index.html" },
-    { "source": "/(.*)", "destination": "/$1" }
-  ]
-}
